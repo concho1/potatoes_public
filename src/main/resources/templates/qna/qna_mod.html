@@ -1,0 +1,69 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+</head>
+
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Q&A 게시판</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section contact">
+        <div class="col-xl">
+
+            <div class="card p-4">
+
+                <form method="post" action="mod_ok">
+
+                    <div class="row gy-4">
+
+                        <input type="hidden" name="num" th:value="${cont.num}">
+                        <input type="hidden" name="page" th:value="${page}">
+
+                        <div class="col-md-12">
+                            <span class="text-start">제목</span>
+                            <input class="form-control" name="title" th:value="${cont.title}">
+                        </div>
+
+                        <div class="col-md-12">
+                            <span class="text-start">내용</span>
+                            <textarea class="form-control" name="cont" rows="6"
+                                      style="resize: none;">[[${cont.cont}]]</textarea>
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <div th:align="center">
+                        <input type="submit" class="btn btn-dark" value="수정하기">&nbsp;&nbsp;&nbsp;
+                        <input type="button" class="btn btn-dark" value="이전으로" th:onclick="history.back()">
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+
+</body>
+
+</html>

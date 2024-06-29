@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <meta charset="UTF-8">
+    <title>감자팀</title>
+</head>
+<body>
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<div align="center">
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1>분실물/습득물 등록</h1>
+            <div class="d-flex justify-content-center py-4">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">게시판</a></li>
+                        <li class="breadcrumb-item active">분실물/습득물 등록</li>
+                    </ol>
+                </nav>
+            </div>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 align-items-center justify-content-center">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">게시글 작성</h5>
+
+                            <!-- General Form Elements -->
+                            <form method="post" th:action="@{/missingBoard_write_ok}" enctype="multipart/form-data">
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">게시글 분류</label>
+                                    <div class="col-sm-10 d-flex justify-content-center">
+                                        <select style="margin-right: 1rem" class="form-select" name="categoryId"  aria-label="Default select example">
+                                            <option value="1">[주웠어요] 습득물</option>
+                                            <option value="2" th:selected="${fix == 2}">[없어졌어요] 분실물</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label">물건 분류</label>
+                                        <div class="col-sm-10 d-flex justify-content-center">
+                                            <select style="margin-right: 1rem" class="form-select" aria-label="Default select example" name="majorCategory" onchange="categoryUpdate(this)">
+                                                <option th:each="catemajorkey, i : ${catelist.keySet()}"
+                                                        th:value="${catemajorkey}"
+                                                        th:text="${catemajorkey}"
+                                                        th:data-catemajorkey="${catemajorkey}">main</option>
+                                            </select>
+
+                                            <select class="form-select" aria-label="Default select example" id="categorySelect" name="minorCategory">
+                                                <option th:each="minor : ${catelist.get('전자기기')}"
+                                                th:text="${minor}">대분류를 선택해주세요.</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">물건 지역 분류</label>
+                                    <div class="col-sm-10 d-flex justify-content-center">
+                                        <select name="location" class="form-select" aria-label="Default select example">
+                                                <option th:each="city : ${list}" th:text="${city}" th:value="${city}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label" >작성자</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="user_id" class="form-control" th:value="${session.userNickname}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">물건이름</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="title" name="title">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3  align-items-center justify-content-center">
+                                    <div class="col-md-8 col-lg-9">
+                                    <p>사진등록</p>
+                                    <p>(선택 없을 시 기본 이미지로 대체.)</p>
+                                    <img id="preview-image" th:src="${noneImg}" alt="프로필" style=" width: 240px; height: 190px;"><br>
+                                    <div class="fileIn">
+                                        <input id="fileAjax" type="file" name="file" accept="image/*" style="display: none;">
+                                    </div>
+                                    <div class="pt-2">
+                                        <!-- 프로필 이미지 변경 버튼 -->
+                                        <a href="#" class="btn btn-primary btn-sm" id="profileImage" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                                        <!--프로필 이미지 삭제 버튼-->
+                                        <a href="#" class="btn btn-danger btn-sm" id="removeImage" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                    </div>
+                                </div>
+                                <input name="removeImage" value="false" type="hidden" id="removeFlag">
+                                <br><br>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">물건 특징 설명</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="cont" style="height: 100px" name="cont"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" onclick="return writeCheck()">게시글 작성하기</button>
+                                    </div>
+                                </div>
+
+                            </form><!-- End General Form Elements -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main><!-- End #main -->
+
+</div>
+<script th:inline="javascript">
+    function removeProfileImage() {
+        // 기본 프로필 이미지 설정
+        const baseImgUrl = /*[[${noneImg}]]*/ null;
+        $('#preview-image').attr('src', baseImgUrl);
+
+        // input[type="file"] 값 제거
+        $('#fileAjax').val('');
+
+        // removeImage를 눌러 removeFlag 값이 true가 되었을 때 기본 프로필이 됨
+        $('#removeFlag').val('true');
+        // profileImage 버튼을 활성화
+        $('#profileImage').prop('disabled', false);
+
+    }
+</script>
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script type="text/javascript" th:src="@{/ham/js/miss_pick_button.js}"></script>
+<script type="text/javascript" th:src="@{/ham/js/imageUpload.js}"></script>
+<script type="text/javascript" th:src="@{/ham/js/Category.js}"></script>
+<script type="text/javascript" th:src="@{/ham/js/writeCheck.js}"></script>
+</body>
+</html>

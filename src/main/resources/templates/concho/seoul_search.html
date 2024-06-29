@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>concho main</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" th:href="@{/common/css/style.css}">
+    <link rel="stylesheet" th:href="@{/common/css/media.css}">
+    <link rel="stylesheet" th:href="@{/concho/css/seoulSearch.css}">
+    <!-- defer 테그는 html 이 완전히 로딩된 이후 js 로딩한다는 뜻 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script defer th:src="@{/concho/js/seoulEventGotoInfoPage.js}"></script>
+    <th:block th:if="${#strings.isEmpty(seoulList) || seoulList.size() == 0}">
+        <script>
+            alert('검색 결과가 없습니다!');
+            history.back();
+        </script>
+    </th:block>
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+<section id="home" class="home">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container mynav">
+
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/common/images/potato.png}" alt="logo">
+                <div class="logo-type">
+                    <h1 class="site-title m-0 p-0">감자 찾기</h1>
+                    <small class="site-description">전국 분실물 찾기 서비스</small>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{main}">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link current" href="#">분실물 찾기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="#">분실물 지도</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="#">분실물 게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="mypage">마이페이지</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                회원/비회원
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><span class="dropdown">로그인</span></a></li>
+                                <li><a class="dropdown-item" href="#"><span class="dropdown">회원가입</span></a></li>
+                                <li><a class="dropdown-item" href="#"><span class="dropdown">마이페이지</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- ---------------form------------ -->
+    <div class="forecast-table" style="margin-top: 3rem">
+        <div class="container">
+            <h3>[서울시 버스, 택시] 최신 습득물 정보</h3>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 3rem; margin-bottom: 2rem">
+        <form class="myform" method="post" th:action="@{/concho/search-seoul}">
+            <div class="input-group mb-3" style="width: 100%; margin-left: auto; background-color: darkgrey">
+                <div style="margin-left: auto" class="selectDiv">
+                    <label for="inputGroupSelect01"></label>
+                    <select name="searchOption" class="form-select" id="inputGroupSelect01">
+                        <option value="all" th:selected="${searchSeoul.searchOption == 'all'}">전체 검색</option>
+                        <option value="productName" th:selected="${searchSeoul.searchOption == 'productName'}">습득물 이름</option>
+                        <option value="category" th:selected="${searchSeoul.searchOption == 'category'}">카테고리</option>
+                        <option value="orgName" th:selected="${searchSeoul.searchOption == 'orgName'}">회사명</option>
+                    </select>
+                </div>
+                <div class="input-group flex-nowrap" style=" height: 50%; margin-top: auto;">
+                    <span class="input-group-text" id="addon-wrapping">Day : </span>
+                    <input name="dayOption" th:value="${searchSeoul.dayOption}" type="number" class="form-control" placeholder="검색할 일수" aria-label="Username" aria-describedby="addon-wrapping">
+                    <span class="input-group-text" id="addon-wrapping1" >일 검색</span>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" placeholder="[서울시 버스, 택시] 검색" id="search2" name="searchStr"  style="border-radius: 20px 20px 20px 20px">
+                <input type="submit" value="찾기" id="submit2" style="border-radius: 20px 20px 20px 20px">
+            </div>
+
+        </form>
+    </div>
+    <nav aria-label="Page navigation example" style="background-color: darkgray">
+        <ul class="pagination justify-content-center" style="background-color: darkgray">
+            <li class="page-item" ></li>
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{search-seoul(
+                   searchStr    =${searchSeoul.searchStr},
+                   searchOption =${searchSeoul.searchOption},
+                   dayOption    =${searchSeoul.dayOption},
+                   limit        =${pagination.getLimit()},
+                   nowGoPageNum='1')}">◀◀</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{search-seoul(
+                   searchStr    =${searchSeoul.searchStr},
+                   searchOption =${searchSeoul.searchOption},
+                   dayOption    =${searchSeoul.dayOption},
+                   limit        =${pagination.getLimit()},
+                   nowGoPageNum=${pagination.getNowPageNum() - 1})}">◀</a>
+            </li>
+            <th:block th:each="block : ${pagination.pageBlocks}">
+                <li class="page-item myPageItem" th:classappend="${pagination.nowPageNum == block} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{search-seoul(
+                       searchStr    =${searchSeoul.searchStr},
+                       searchOption =${searchSeoul.searchOption},
+                       dayOption    =${searchSeoul.dayOption},
+                       limit        =${pagination.limit},
+                       nowGoPageNum=${block})}"
+                       th:text="${block}">
+                    </a>
+                </li>
+            </th:block>
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{search-seoul(
+                   searchStr    =${searchSeoul.searchStr},
+                   searchOption =${searchSeoul.searchOption},
+                   dayOption    =${searchSeoul.dayOption},
+                   limit        =${pagination.getLimit()},
+                   nowGoPageNum =${pagination.getNowPageNum()+1})}">▶</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{search-seoul(
+                   searchStr    =${searchSeoul.searchStr},
+                   searchOption =${searchSeoul.searchOption},
+                   dayOption    =${searchSeoul.dayOption},
+                   limit        =${pagination.getLimit()},
+                   nowGoPageNum=${pagination.getEndPageNum()})}">▶▶</a>
+            </li>
+            <li class="page-item"></li>
+        </ul>
+    </nav>
+    <div class="search-table" style="margin-left: 2rem; margin-right: 2rem">
+    <table class="table-secondary">
+        <thead>
+        <tr><th colspan="6"><strong style="color: black" th:text="${'[총 : ' +searchSeoul.searchCnt + ' 개 검색]'}"></strong></th></tr>
+        <tr>
+            <th scope="col">습득물 이름</th>
+            <th scope="col" >카테고리</th>
+            <th scope="col" class="hide-on-small">상태</th>
+            <th scope="col" >보관 회사</th>
+            <th scope="col" class="hide-on-small">보관 장소</th>
+            <th scope="col" class="hide-on-small">습득일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="seoul : ${seoulList}" class="seoul">
+            <td th:text="${seoul.getActId()}" hidden="hidden"></td>
+            <td th:text="${#strings.abbreviate(seoul.getProductName(),20)}"></td>
+            <td th:text="${seoul.getCategory()}"></td>
+            <td th:text="${seoul.getStatus()}"  class="hide-on-small"></td>
+            <td th:text="${seoul.getOrgName()}" ></td>
+            <td th:text="${seoul.getTakePlace()}" class="hide-on-small"></td>
+            <td th:text="${#strings.abbreviate(seoul.getDate(), 13)}" class="hide-on-small"></td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+        <div class="container">
+            <div class="" id="forecast">
+                <div class="accordion accordion-flush" id="accordionFlushExample1">
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+    <!-- footer -->
+    <footer class="myfoot">
+        <div class="container">
+            <div class="row footerRow">
+                <div class="col-md-3">
+                    <div class="social">
+                        <span>제작자들</span>
+                    </div>
+                    <div class="social">
+                        <a href="#"><i class="fa-brands fa-twitter"></i><span class="makers">준우</span></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i><span class="makers">홍민</span></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i><span class="makers">태근</span></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i><span class="makers">민영</span></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i><span class="makers">승현</span></a>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4">2024 05 16</p>
+        </div>
+
+    </footer>
+</section>
+</body>
+
+</html>

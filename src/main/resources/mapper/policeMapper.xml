@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.police.model.PoliceMapper">
+
+    <insert id="add">
+        insert ignore into goott.police(police_key, atc_id, title, fdSn) values
+                                                                                <foreach collection="dList" item="police" separator=",">
+                                                                                    (#{police.policeKey}, #{police.atcId}, #{police.title}, #{police.fdSn})
+                                                                                </foreach>
+    </insert>
+    
+    <update id="update_police" parameterType="Police">
+        update goott.police set file_path_img = #{filePathImg},
+                                place = #{place}, date = #{date},
+                                org_name = #{orgName}, org_tel = #{orgTel},
+                                product_name = #{productName}, cont = #{cont},
+                                status = #{status},
+                                addr = #{addr}
+                            where police_key = #{policeKey}
+    </update>
+
+    <insert id="add_sec">
+        insert into goott.police_sector values
+                            <foreach collection="sList" item="section" separator=",">
+                                (
+                                 #{section.secNum},
+                                 #{section.main},
+                                 #{section.center},
+                                #{section.name},
+                                #{section.sep},
+                                #{section.tel},
+                                #{section.addr}
+                                )
+                            </foreach>
+    </insert>
+
+    <select id="findAddr" parameterType="String" resultType="String">
+        select addr from goott.police_sector where tel = #{tel}
+    </select>
+
+    <select id="list" parameterType="PolicePage" resultType="Police">
+        <![CDATA[
+        select * from (select row_number() over(order by date desc) rnum, p.* from goott.police p) where rnum >= #{startNo} and rnum <= #{endNo}
+        ]]>
+    </select>
+
+    <select id="countList" resultType="int">
+        select count(*) from goott.police
+    </select>
+
+</mapper>

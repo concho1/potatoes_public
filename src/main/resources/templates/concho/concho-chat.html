@@ -1,0 +1,257 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+</head>
+<style>
+    .me{
+        /*
+        background-color: #99d1ec;
+         */
+        color: black;
+        text-align: right;
+    }
+    .other {
+        /*
+        background-color: lightgoldenrodyellow;
+        */
+        color: black;
+        text-align: left;
+    }
+    .wrap {
+        padding: 40px 0;
+        background-color: #A8C0D6;
+    }
+
+    .wrap .chat {
+        display: flex;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    .wrap .chat .icon {
+        position: relative;
+        overflow: hidden;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #eee;
+    }
+
+    .wrap .chat .icon i {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        font-size: 2.5rem;
+        color: #aaa;
+        transform: translateX(-50%);
+    }
+
+    .wrap .chat .textbox {
+        position: relative;
+        display: inline-block;
+        max-width: calc(100% - 70px);
+        padding: 10px;
+        margin-top: 7px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+
+    .wrap .chat .textbox::before {
+        position: absolute;
+        display: block;
+        top: 0;
+        font-size: 1.5rem;
+    }
+
+    .wrap .ch1 .textbox {
+        margin-left: 20px;
+        background-color: #ddd;
+    }
+
+    .wrap .ch1 .textbox::before {
+        left: -15px;
+        content: "◀";
+        color: #ddd;
+    }
+
+    .wrap .ch2 {
+        flex-direction: row-reverse;
+    }
+
+    .wrap .ch2 .textbox {
+        margin-right: 20px;
+        background-color: #F9EB54;
+    }
+
+    .wrap .ch2 .textbox::before {
+        right: -15px;
+        content: "▶";
+        color: #F9EB54;
+    }
+    #my-card{
+        height: 99%;
+        width: 70%;
+    }
+    .chatting {
+        max-height: 500px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    #msg{
+        border: 0;
+        width: 85%;
+        height: 100%;
+        margin-right: 0.2%;
+    }
+    .my-button{
+        width: 15%;
+        height: 100%;
+        background-color: #a7b6ce;
+        border: 0;
+    }
+    .send-button {
+        width: 14.8%;
+        background-color: #fef01b;
+        color: black;
+        border: none;
+        padding: 10px ;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    .send-button:hover {
+        background-color: #e6d700;
+    }
+    @media (max-width: 500px) {
+        #my-card{
+            width: 100%;
+        }
+        #msg{
+            border: 0;
+            width: 70%;
+            height: 100%;
+            margin-right: 0.2%;
+        }
+        .send-button {
+            width: 29.8%;
+        }
+    }
+</style>
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main" >
+    <section class="section">
+        <div class="row justify-content-center">
+            <div id="my-card" class="card mb-3" th:align="center">
+                <div style="width: 100%; height: 50px; background-color: #90b0d7;">
+                    <h1 id="title_room" class="card-title " style="padding-bottom: 1rem;  padding-left: 0"></h1>
+                </div>
+                <div class="wrap" style="padding-top: 0; padding-bottom: 0">
+
+                    <div id="chatting" class="chatting">
+
+                        <th:block th:each="message : ${messageList}">
+                            <th:block th:if="${message.getSendUserNickname().equals(session.userNickname)}">
+
+                                <div class="chat ch2">
+                                    <div class="icon">
+                                        <img style="width: 100%; height: 100%" th:if="${session.userImgUrl != null}" th:src="${session.userImgUrl}" alt="Profile" class="rounded-circle">
+                                    </div>
+                                    <div class="textbox" th:text="|${message.getCont()}|"></div>
+                                </div>
+
+                            </th:block>
+                            <th:block th:if="${!message.getSendUserNickname().equals(session.userNickname)}">
+
+                                <div class="chat ch1">
+                                    <div class="icon">
+                                        <img style="width: 100%; height: 100%" th:if="${session.userImgUrl != null}" th:src="${receiverImgUrl}" alt="Profile" class="rounded-circle">
+                                    </div>
+                                    <div class="textbox" th:text="${message.getCont()}"></div>
+                                </div>
+
+                            </th:block>
+
+
+                        </th:block>
+
+                    </div>
+                    <div class="input-group" style=" width: 100%; height: 60px; background-color: #a7b6ce">
+                        <input  id="msg" placeholder="보내실 메시지를 입력하세요.">
+                        <button id="sendBtn" class="send-button">전송</button>
+                        <!--
+                        <button class="my-button" style="" id="sendBtn">
+                            <img style="width: 99%; height: 99%;" th:src="@{/assets/img/btn.png}" alt="">
+                        </button>
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-6">
+
+                <div class="card">
+                    <div class="container" id="container">
+                        <h1 id="title_room">채팅방제목</h1>
+                        <div id="chatting" class="chatting">
+                            <th:block th:each="message : ${messageList}">
+                                <th:block th:if="${message.getSendUserNickname().equals(session.userNickname)}">
+                                    <p class='me' th:text="|${message.getCont()}|"></p>
+                                </th:block>
+                                <th:block th:if="${!message.getSendUserNickname().equals(session.userNickname)}">
+                                    <img class='rounded-circle' style='width: 30px; height: 30px' th:src="${receiverImgUrl}" alt='img'>
+                                    <p class='other' th:text="|${message.getSendUserNickname()} : ${message.getCont()}|"></p>
+                                </th:block>
+                            </th:block>
+                        </div>
+                        <div>
+                            <table class="inputTable">
+                                <tr>
+                                    <th>메시지</th>
+                                    <th><input id="msg" placeholder="보내실 메시지를 입력하세요."></th>
+                                    <th><button id="sendBtn">보내기</button></th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    -->
+</main>
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:inline="javascript">
+    // 필요값들
+    const userNickname = /*[[${session.userNickname}]]*/ null;
+    const sendToUserNickname = /*[[${receiver}]]*/ null;
+    const receiverImgUrl = /*[[${receiverImgUrl}]]*/ null;
+    const userImgUrl = /*[[${session.userImgUrl}]]*/ null;
+    const $contentBox = $('#msg');
+    const $sendBtn =  $('#sendBtn');
+</script>
+<script th:src="@{/concho/js/concho_chat.js}"></script>
+</body>
+
+</html>

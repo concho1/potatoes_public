@@ -1,0 +1,130 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}"><title>감자팀</title></head>
+<style>
+
+    .pointer-style{
+        cursor: pointer;
+    }
+    .hidden-info{
+        display: none;
+    }
+    #my-table{
+        display: none;
+    }
+    .pointer-style{
+        cursor: pointer;
+        white-space: nowrap;          /* 텍스트를 한 줄로 표시 */
+        overflow: hidden;             /* 넘치는 텍스트를 숨김 */
+        text-overflow: ellipsis;      /* 말줄임표(...)를 사용 */
+        max-width: 300px;             /* 원하는 최대 너비를 설정 */
+    }
+    @media (max-width: 500px) {
+        .datatable-search{
+            width: 70%;
+        }
+        .datatable-input{
+            width: 100%;
+        }
+        #editing-view-port, #text-field-container, #placeholder{
+            width: 100%;
+        }
+        .mybt{
+            width: 40%;
+        }
+        .datatable-dropdown {
+            display: none; /* 페이지당 항목 수 선택 드롭다운 숨기기 */
+        }
+        .date-hide{
+            display: none; /* 페이지당 항목 수 선택 드롭다운 숨기기 */
+        }
+        .pointer-style{
+            cursor: pointer;
+            white-space: nowrap;          /* 텍스트를 한 줄로 표시 */
+            overflow: hidden;             /* 넘치는 텍스트를 숨김 */
+            text-overflow: ellipsis;      /* 말줄임표(...)를 사용 */
+            max-width: 80px;             /* 원하는 최대 너비를 설정 */
+        }
+    }
+</style>
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- End Table with stripped rows -->
+                <div id="spin" th:align="center">
+                    <div class="spinner-border" style="width: 200px; height: 200px;" role="status"></div>
+                    <br>
+                    <span class="a" style="margin: 1rem 1rem 1rem 1rem">데이터를 가져오는 중입니다 ....</span>
+                </div>
+                <div class="card" id="my-table">
+                    <div class="card-body">
+                        <h5 class="card-title ">습득물 목록 <span>총 데이터 : </span><span th:text="${totalLostList.size()}"></span>
+                            <button style="margin-left: 2rem" type="button" onclick="history.back()" class="btn btn-primary rounded-pill btn-sm">뒤로가기</button>
+                        </h5>
+                        <!-- Table with stripped rows -->
+                        <table class="table datatable">
+                            <thead>
+                            <tr>
+                                <th class="pointer-style">물품</th>
+                                <th class="pointer-style">장소</th>
+                                <th class="date-hide" data-type="date" data-format="YYYY-MM-DD">날짜</th>
+                                <th>사진</th>
+                                <th class="hidden-info">id</th>
+                                <th class="hidden-info">sector</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="totalLost : ${totalLostList}">
+                                <td class="pointer-style" th:text="${totalLost.getName()}"></td>
+                                <td class="pointer-style" th:text="${totalLost.getDept()}"></td>
+                                <td class="date-hide pointer-style" th:text="${totalLost.getDate()?.toString().substring(0, 10)}"></td>
+                                <td><img loading="lazy" style="width: 60px; height: 60px" th:src="${totalLost.getImgUrl()}" alt="img"></td>
+                                <td class="hidden-info id" th:text="${totalLost.getIdPlus()}"></td>
+                                <td class="hidden-info sector" th:text="${totalLost.getSector()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{concho/footer_for_main3 :: footer-fragment}"></footer>
+<script th:inline="Javascript">
+    $(document).ready(function (){
+        $(document).on('click', '.pointer-style', function (){
+            let idPlus = $(this).siblings('.id').text();
+            let sector = $(this).siblings('.sector').text();
+            location.href = '/concho/info?idPlus='+idPlus+'&sector='+sector;
+        });
+        $('#my-table').show();
+        $('#spin').hide();
+    });
+    $(window).on('load', function() {
+        $('#my-table').show();
+        $('#spin').hide();
+    });
+</script>
+</body>
+
+</html>

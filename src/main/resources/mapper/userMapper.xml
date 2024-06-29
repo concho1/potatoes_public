@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.user.mapper.UserMapper">
+
+    <select id="contUser" parameterType="String" resultType="User">
+        SELECT * FROM user
+        WHERE id = #{id}
+    </select>
+    <select id="findUserByNickname" parameterType="String" resultType="User">
+        SELECT * FROM user
+        WHERE nickname = #{nickname}
+    </select>
+    <update id="updateUser" parameterType="User">
+        UPDATE user SET nickname=#{nickname}, location=#{location}, img_key=#{imgKey} WHERE id=#{id}
+    </update>
+
+    <update id="updatePwd" parameterType="String">
+        UPDATE user SET pwd=#{pwd} WHERE id=#{id}
+    </update>
+
+    <select id="checkPwd" parameterType="User" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM user WHERE id = #{id} AND pwd = #{pwd}
+    </select>
+
+    <delete id="deleteUser" parameterType="String">
+        DELETE FROM user WHERE id=#{id}
+    </delete>
+</mapper>

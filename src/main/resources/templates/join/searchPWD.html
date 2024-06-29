@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <meta charset="UTF-8">
+    <title>감자팀</title>
+</head>
+<body>
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<div align="center">
+    <main id="main" class="main">
+        <section class="section">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 align-items-center justify-content-center">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">비밀번호 찾기</h5>
+                            <label class="col-sm-8 col-form-label">회원가입시에 입력한 닉네임과 이메일 주소를 입력해주세요!</label>
+                            <br><br>
+                            <!-- General Form Elements -->
+                            <form method="post" th:action="@{/changePwd}" enctype="multipart/form-data">
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">닉네임</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="nickname" name="nickname" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">이메일</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <input type="text" name="email" class="form-control" id="email">
+                                            <input type="button" value="이메일 인증" class="btn btn-primary" id="sendEmail" disabled="true">
+                                        </div>
+                                    </div>
+                                </div>
+                                        <div id="emailError" class="col-sm-10" style="color: red; display: none;">아이디는 이메일 형식으로 입력해주세요.</div>
+
+
+
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" onclick="return searchPwdCheck()">다음</button>
+                                    </div>
+                                </div>
+
+                            </form><!-- End General Form Elements -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main><!-- End #main -->
+
+</div>
+
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script type="text/javascript" th:src="@{/ham/js/pwdSearch.js}"></script>
+<script type="text/javascript" th:src="@{/ham/js/searchPwdCheck.js}"></script>
+
+</body>
+</html>

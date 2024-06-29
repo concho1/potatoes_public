@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 정보</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div align="center">
+    <br>
+    <hr>
+    <h2>게시글 정보</h2>
+    <hr>
+    <br><br>
+    <table border="1">
+        <tr>
+            <th>작성자</th> <th>제목</th> <th>내용</th> <th>조회수</th> <th>생성일</th> <th>수정일</th> <th>사진</th>
+        </tr>
+
+        <tr th:if="${not #strings.isEmpty(Cont)}">
+            <td th:text="${Cont.userNickname}"></td>
+            <td th:text="${Cont.title}"></td>
+            <td> <pre>[[${Cont.cont}]]</pre> </td>
+            <td th:text="${Cont.viewCnt}"></td>
+            <td th:text="${Cont.createdAt}"></td>
+            <td th:text="${Cont.updatedAt}"></td>
+            <td><img style="width: 40px" th:src="${Cont.imgKey}" alt="이미지"></td>
+        </tr>
+    </table>
+    <br>
+    <input th:if="${userIdSession.equals(Cont.userId)}"
+           type="button" value="수정하기" th:onclick="|location.href='@{/board_update(no=${Cont.boardNum})}'|">
+    &nbsp;&nbsp;&nbsp;
+    <input th:if="${userIdSession.equals(Cont.userId)}"
+           type="button" value="삭제하기"  th:onclick="deletePost('[[${Cont.boardNum}]]')">
+    <br><br>
+    <input type="button" value="목록으로" th:onclick="|location.href='board_list'|">
+    <br><hr>
+
+    <div>
+        <h3>댓글</h3>
+
+            <textarea id="commentContent" name="content" rows="4" cols="50" placeholder="댓글을 작성해보세요"></textarea>
+            <br>
+            <input type="button" value="댓글 작성" onclick="submitComment()">
+
+    </div>
+
+    <!--&lt;!&ndash; 댓글 리스트 &ndash;&gt;
+    <div id="commentList">
+        &lt;!&ndash; 댓글 목록이 표시될 부분 &ndash;&gt;
+    </div>-->
+
+</div>
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script th:inline="javascript">
+    function deletePost(boardNum) {
+        if (confirm('게시글을 삭제 하시겠습니까?')) {
+            location.href = `/board_delete_ok?no=${boardNum}`;
+        }
+    }
+
+    function submitComment() {
+        const boardNum = /*[[${Cont.boardNum}]]*/ 'default'; // 서버에서 현재 게시글 번호를 가져와야 합니다.
+        const userId = /*[[${userIdSession}]]*/ 'default'; // 서버에서 현재 사용자 아이디를 가져와야 합니다.
+        const content = document.getElementById("commentContent").value;
+
+        if (content.trim() === '') {
+            alert('댓글 내용을 입력해주세요.');
+            return;
+        }
+        if (userId === 'default') {
+            alert('회원만 댓글을 달 수 있습니다');
+            return;
+        }
+        let formData = new FormData();
+        formData.append("boardNum",boardNum);
+        formData.append("id",userId);
+        formData.append("cont",content);
+        formData.append("step",'0');
+        formData.append("depth",'0');
+
+        let response = ajaxFunction('/insert_reply', formData);
+        if(response === "success"){
+            alert('성공');
+        }else{
+            alert('실패');
+        }
+    }
+
+    function ajaxFunction(url, formData) {
+        let responseResult = null;
+        let baseUrl = window.location.origin;
+
+        $.ajax({
+            url: baseUrl + url,
+            type: 'POST',
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                responseResult = response;
+            },
+            error: function(error) {
+                alert('통신 오류: ' + error);
+            }
+        });
+        return responseResult;
+    }
+
+    function loadCommentList() {
+
+    }
+
+</script>
+</body>
+</html>

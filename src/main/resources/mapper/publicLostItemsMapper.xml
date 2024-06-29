@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.concho.mapper.PublicLostItemsMapper">
+    <insert id="insertPublicLostList">
+        INSERT IGNORE INTO goott.public_lost_items (
+        id_plus, act_id, gain_num, dept, img_url, name, content, date, major_category, minor_category, tel, front_tel
+        ) VALUES
+        <foreach collection="publicLostList" item="publicLost" separator=",">
+            (
+            #{publicLost.idPlus},
+            #{publicLost.actId},
+            #{publicLost.gainNum},
+            #{publicLost.dept},
+            #{publicLost.imgUrl},
+            #{publicLost.name},
+            #{publicLost.content},
+            #{publicLost.date},
+            #{publicLost.majorCategory},
+            #{publicLost.minorCategory},
+            #{publicLost.tel},
+            #{publicLost.frontTel}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertPoliceLostList">
+        INSERT IGNORE INTO goott.public_police_lost_items (
+        id_plus, act_id, gain_num, dept, img_url, name, content, date, major_category, minor_category, tel, front_tel
+        ) VALUES
+        <foreach collection="publicLostList" item="publicLost" separator=",">
+            (
+            #{publicLost.idPlus},
+            #{publicLost.actId},
+            #{publicLost.gainNum},
+            #{publicLost.dept},
+            #{publicLost.imgUrl},
+            #{publicLost.name},
+            #{publicLost.content},
+            #{publicLost.date},
+            #{publicLost.majorCategory},
+            #{publicLost.minorCategory},
+            #{publicLost.tel},
+            #{publicLost.frontTel}
+            )
+        </foreach>
+    </insert>
+    <select id="existsByDatePolice" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM goott.public_police_lost_items
+            WHERE DATE(date) = #{date}
+        )
+    </select>
+    <select id="existsByDatePortal" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM goott.public_lost_items
+            WHERE DATE(date) = #{date}
+        )
+    </select>
+    <select id="getItemsByTelAndCategory" resultType="PublicLost">
+        SELECT *
+        FROM public_lost_items
+        WHERE major_category = #{majorCategory}
+          AND minor_category = #{minorCategory}
+          AND front_tel = #{frontTel};
+    </select>
+    <select id="getPoliceItemsByTelAndCategory" resultType="PublicLost">
+        SELECT *
+        FROM public_police_lost_items
+        WHERE major_category = #{majorCategory}
+          AND minor_category = #{minorCategory}
+          AND front_tel = #{frontTel};
+    </select>
+    <select id="getItemByPlusId" resultType="PublicLost">
+        SELECT *
+        FROM public_lost_items
+        WHERE id_plus = #{idPlus};
+    </select>
+    <select id="getPoliceItemByPlusId" resultType="PublicLost">
+        SELECT *
+        FROM public_police_lost_items
+        WHERE id_plus = #{idPlus};
+    </select>
+
+
+
+    <select id="getItemsBySearch" resultType="PublicLost">
+        <bind name="pattern" value="'%' + search + '%'" />
+        SELECT *
+        FROM public_lost_items
+        WHERE name LIKE #{pattern}
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset};
+    </select>
+
+    <select id="getItemsBySearchCnt" resultType="Integer">
+        <bind name="pattern" value="'%' + search + '%'" />
+        SELECT COUNT(*)
+        FROM public_lost_items
+        WHERE name LIKE #{pattern};
+    </select>
+
+    <select id="getPoliceItemsBySearch" resultType="PublicLost">
+        <bind name="pattern" value="'%' + search + '%'" />
+        SELECT *
+        FROM public_police_lost_items
+        WHERE name LIKE #{pattern}
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset};
+    </select>
+
+    <select id="getPoliceItemsBySearchCnt" resultType="Integer">
+        <bind name="pattern" value="'%' + search + '%'" />
+        SELECT COUNT(*)
+        FROM public_police_lost_items
+        WHERE name LIKE #{pattern};
+    </select>
+
+    <select id="getCombinedItemsBySearch" resultType="PublicLost">
+        <bind name="pattern" value="'%' + search + '%'" />
+        SELECT *
+        FROM (
+            SELECT *
+            FROM public_lost_items
+            WHERE name LIKE #{pattern}
+            UNION ALL
+            SELECT *
+            FROM public_police_lost_items
+            WHERE name LIKE #{pattern}
+        ) AS combined_results
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset};
+    </select>
+
+    <select id="getCombinedItemsBySearchCnt" resultType="Integer">
+        <bind name="pattern" value="'%' + search + '%'" />
+        SELECT COUNT(*)
+        FROM (
+            SELECT *
+            FROM public_lost_items
+            WHERE name LIKE #{pattern}
+            UNION ALL
+            SELECT *
+            FROM public_police_lost_items
+            WHERE name LIKE #{pattern}
+        ) AS combined_results;
+    </select>
+
+</mapper>

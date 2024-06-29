@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+    <meta charset="UTF-8">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+    <div class="card mb-3">
+        <div class="row g-0">
+            <h5 class="card-title" style="margin-left: 1rem">게시글 정보</h5>
+            <input type="hidden" th:value="${page}" id="page">
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+
+                <div class="card">
+
+                    <div class="card-body" style="margin: 0 0 0 0; padding: 0">
+
+                        <!-- Basic Modal -->
+                        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#basicModal">
+                            <img style="width: 100%; height: 75%;" th:src="${Cont.getImgKey()}" class="card-img" alt="...">
+                        </button>
+                        <div class="modal fade" id="basicModal" tabindex="-1" >
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" th:text="${Cont.getUserId()}"></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img th:src="${Cont.getImgKey()}" class="card-img" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Basic Modal-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-overview" id="profile-overview" role="tabpanel">
+                            <h5 class="card-title">조회수</h5>
+                            <p class="col-lg-9 col-md-8" style="font-weight: bold;" th:text="${Cont.getViewCnt()}"></p>
+
+                            <h5 class="card-title">작성자</h5>
+                            <p class="card-text" style="font-weight: bold;" th:text="${Cont.getUserNickname()}"></p>
+
+                            <h5 class="card-title">제목</h5>
+                            <p class="class-text" style="font-weight: bold;" th:text="${Cont.getTitle()}"></p>
+                        </div>
+                    </div>
+                    <h5 class="card-title">내용</h5>
+                    <pre><p class="card-text" style="font-weight: bold;" th:utext="${Cont.getCont()}"></p></pre>
+                    <br><br><br>
+                    <br>
+                    <div class="row mb-3">
+                        <label class="card-title">작성일</label>
+                        <div class="col-sm-10">
+                            <span th:text="${#strings.substring(Cont.createdAt, 0, 19)}" style="font-weight: bold;"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="card-title">수정일</label>
+                        <div class="col-sm-10">
+                            <span th:text="${#strings.substring(Cont.updatedAt, 0, 19)}" style="font-weight: bold;"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button style="margin-right: 1rem" type="button" th:if="${userIdSession.equals(Cont.userId)}" class="btn btn-primary rounded-pill"
+                                th:onclick="|location.href='@{/deco_board_update(no=${Cont.boardNum})}'|">수정</button>
+                        <button type="button" th:if="${userIdSession.equals(Cont.userId)}" class="btn btn-primary rounded-pill"
+                                th:onclick="deletePost('[[${Cont.boardNum}]]')" style="margin-right: 1rem">삭제</button>
+
+                        <button type="button" class="btn btn-primary rounded-pill" th:onclick="|location.href='deco_board_list?page=${page}'|" style="margin-right: 1rem">목록</button>
+                        <div class="d-flex justify-content-center align-items-center" th:if="${userIdSession != Cont.userId}">
+                            <input type="button" class="btn btn-primary rounded-pill" id="BoardchatLink" value="메세지 보내기" style="margin-left: 4rem;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <div style="width: 80%;">
+                <h5 class="card-title">댓글 쓰기</h5>
+                <!-- Floating Labels Form -->
+                <div class="col-12">
+                    <div>
+                            <textarea id="commentContent" name="content" class="form-control"
+                                      style="height: 100px; padding: 0 0 0 0"></textarea>
+                    </div>
+                </div>
+
+                <div class="text-center" style="margin-top: 1rem">
+                    <div>
+                        <button type="button" onclick="submitComment()" class="btn btn-primary">완료</button>
+                        <button type="reset" onclick="resetForm()" class="btn btn-secondary">다시</button>
+                    </div>
+                </div>
+
+                <br>
+
+                <!-- 댓글 목록 -->
+                <h5 class="card-title">댓글 목록</h5>
+                <div th:each="reply : ${replyList}" style="background-color: #f8f9fa; color: #343a40; margin: 10px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;">
+                    <p>
+                        <span th:text="${reply.id}"></span>: <span th:text="${reply.cont}"></span>
+
+                        <span th:if="${userIdSession.equals(reply.id)}" style="float: right;">
+                            <button type="button" th:onclick="|deleteReply('${reply.replyNum}')|" class="btn btn-danger btn-sm">삭제</button>
+                        </span>
+                    </p>
+                    <p th:text="${#strings.substring(reply.date.toString(), 0, 10)}"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main><!-- End #main -->
+<script th:inline="javascript">
+    let boardNum = /*[[${Cont.boardNum}]]*/ null; // 서버에서 현재 게시글 번호를 가져와야 합니다.
+    let userId = /*[[${userIdSession}]]*/ null; // 서버에서 현재 사용자 아이디를 가져와야 합니다.
+    let name = /*[[${Cont.userId}]]*/ null;
+    let page = /*[[${page}]]*/ null;
+
+    $(document).ready(function () {
+        $(document).on('click','#BoardchatLink',function (event) {
+            event.preventDefault();  // 기본 링크 동작을 막음
+            if (name) {
+                window.location.href = '/chat-to/' + name;
+            }
+        });
+    });
+
+    function deletePost(boardNum) {
+        if (confirm('게시글을 삭제 하시겠습니까?')) {
+            location.href = `/deco_board_delete_ok?no=${boardNum}`;
+        }
+    }
+
+    function submitComment() {
+
+        let content = $('#commentContent').val();
+
+        if (content.trim() === '') {
+            alert('댓글 내용을 입력해주세요.');
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("boardNum", boardNum);
+        formData.append("id", userId);
+        formData.append("cont", content);
+        formData.append("step", '0');
+        formData.append("depth", '0');
+
+        let response = ajaxFunction('/deco_insert_reply', formData);
+
+        if(response === "success") {
+            location.reload();
+        }
+        else if(response === "login_required") {
+            alert('로그인 후 이용 가능합니다.')
+        }
+        else {
+            alert('오류가 발생했습니다.');
+        }
+    }
+
+    function deleteReply(replyNum) {
+        if (confirm('댓글을 삭제 하시겠습니까?')) {
+            $.ajax({
+                url: "/deco_delete_reply",
+                type: "POST",
+                data: { replyNum: replyNum },
+                success: function(response) {
+                    if (response === "success") {
+                        location.reload();
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                },
+                error: function(error) {
+                    alert('통신 오류: ' + error);
+                }
+            });
+        }
+    }
+
+    function ajaxFunction(url, formData) {
+        let responseResult = null;
+        let baseUrl = window.location.origin;
+
+        $.ajax({
+            url: baseUrl + url,
+            type: 'POST',
+            data: formData,
+            async: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                responseResult = response;
+            },
+            error: function (error) {
+                alert('통신 오류: ' + error);
+            }
+        });
+        return responseResult;
+    }
+
+    function resetForm() {
+        document.getElementById('commentContent').value = ''; // 댓글 입력 필드 초기화
+    }
+
+</script>
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+</body>
+</html>

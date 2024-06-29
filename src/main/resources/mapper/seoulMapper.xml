@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.concho.mapper.SeoulMapper">
+
+    <insert id="insertSeoulList" parameterType="java.util.List">
+        INSERT IGNORE INTO seoul (
+        act_id, status, product_name, category, date, org_name, take_place, cont
+        ) VALUES
+        <foreach collection="seoulList" item="seoul" separator=",">
+            (
+            #{seoul.actId},
+            #{seoul.status},
+            #{seoul.productName},
+            #{seoul.category},
+            #{seoul.date},
+            #{seoul.orgName},
+            #{seoul.takePlace},
+            #{seoul.cont}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findSeoulListByLimitAndOffset" resultType="Seoul">
+        SELECT *
+        FROM seoul
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- product_name 검색하는 쿼리 -->
+    <select id="searchSeoulListByProductName" resultType="Seoul">
+        SELECT *
+        FROM seoul
+        WHERE product_name LIKE CONCAT('%', #{searchStr}, '%')
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="searchSeoulListByProductNameCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM seoul
+        WHERE product_name LIKE CONCAT('%', #{searchStr}, '%')
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+    </select>
+
+    <!-- category 검색하는 쿼리 -->
+    <select id="searchSeoulListByCategory" resultType="Seoul">
+        SELECT *
+        FROM seoul
+        WHERE category LIKE CONCAT('%', #{searchStr}, '%')
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="searchSeoulListByCategoryCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM seoul
+        WHERE category LIKE CONCAT('%', #{searchStr}, '%')
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+    </select>
+
+    <!-- orgName 검색하는 쿼리 -->
+    <select id="searchSeoulListByOrgName" resultType="Seoul">
+        SELECT *
+        FROM seoul
+        WHERE org_name LIKE CONCAT('%', #{searchStr}, '%')
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="searchSeoulListByOrgNameCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM seoul
+        WHERE org_name LIKE CONCAT('%', #{searchStr}, '%')
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+    </select>
+
+    <!-- 통합 검색 쿼리 -->
+    <select id="searchSeoulListBySearchStr" resultType="Seoul">
+        SELECT *
+        FROM seoul
+        WHERE (product_name LIKE CONCAT('%', #{searchStr}, '%')
+           OR category LIKE CONCAT('%', #{searchStr}, '%')
+           OR org_name LIKE CONCAT('%', #{searchStr}, '%'))
+            AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="searchSeoulListBySearchStrCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM seoul
+        WHERE (product_name LIKE CONCAT('%', #{searchStr}, '%')
+            OR category LIKE CONCAT('%', #{searchStr}, '%')
+            OR org_name LIKE CONCAT('%', #{searchStr}, '%'))
+          AND date > DATE_SUB(CURDATE(), INTERVAL #{day} DAY)
+    </select>
+
+
+    <!-- id 검색 -->
+    <select id="findSeoulById" resultType="Seoul">
+        SELECT * FROM seoul WHERE act_id = #{actId}
+    </select>
+    <!-- id 검색 -->
+    <select id="findSeoulByIdPlus" resultType="Seoul">
+        SELECT * FROM seoul WHERE act_id = #{idPlus}
+    </select>
+
+
+    <select id="existsByDateSeoul" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM goott.seoul
+            WHERE DATE(date) = #{date}
+        )
+    </select>
+
+    <select id="getSeoulListByCate" resultType="Seoul">
+        SELECT * FROM seoul
+        WHERE (product_name LIKE CONCAT('%', #{minor}, '%') OR product_name LIKE CONCAT('%', #{minor}, '%'))
+    </select>
+    <!-- 서울은 데이터 별로 없어서 concat 씀 -->
+    <select id="getSeoulListBySearch" resultType="Seoul">
+        SELECT * FROM seoul
+        WHERE product_name LIKE CONCAT('%', #{search}, '%')
+        ORDER BY date DESC
+        LIMIT #{limit} OFFSET #{offset};
+    </select>
+    <select id="getSeoulListBySearchCnt" resultType="Integer">
+        SELECT COUNT(*)
+        FROM seoul
+        WHERE product_name LIKE CONCAT('%', #{search}, '%');
+    </select>
+</mapper>

@@ -1,0 +1,66 @@
+.seoul{
+    cursor: pointer;
+
+}
+.table-secondary{
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+table {
+    width: 100%;
+    border: 1px solid #444444;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 0.5rem;
+    border: 1px solid #444444;
+}
+.page-item{
+
+}
+.page-link{
+
+}
+.page-item{
+    background-color: #494949;
+}
+.page-link{
+    background-color: #494949;
+}
+option{
+    background-color: #494949;
+}
+/* 기본적으로 열을 보이게 설정 */
+.hide-on-small {
+    display: table-cell;
+}
+.selectDiv{
+    margin-top: 0;
+    background-color: darkgrey;
+}
+.selectDiv{
+    width: 30%;
+}
+.flex-nowrap{
+    width: 30%;
+    margin-left: 2rem;
+}
+.page-item{
+    background-color: darkgray;
+}
+/* 화면 너비가 991.98px 이하일 때 특정 열 숨기기 */
+@media (max-width: 991.98px) {
+    .hide-on-small {
+        display: none;
+    }
+    .selectDiv{
+        width: 50%;
+    }
+    .flex-nowrap{
+        width: 50%;
+        margin-left: auto;
+    }
+    .myPageItem{
+        display: none;
+    }
+}

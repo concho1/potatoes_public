@@ -1,0 +1,164 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+</head>
+<style>
+
+</style>
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>자유 게시판</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">[[${cont.title}]]</h5>
+                        <input type="hidden" th:value="${page}" id="page">
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-4 d-flex justify-content-center align-items-center">
+
+                                    <div class="card">
+                                        <div class="card-body" style="margin: 0 0 0 0; padding: 0">
+                                            <!-- Basic Modal -->
+                                            <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#basicModal">
+                                                <img th:src="${cont.getImgKey()}" style="width: 100%;" class="card-img" alt="...">
+                                            </button>
+                                            <div class="modal fade" id="basicModal" tabindex="-1" >
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"></h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img th:src="${cont.getImgKey()}" class="card-img" alt="...">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- End Basic Modal-->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <div class="tab-content pt-2">
+
+                                            <div class="tab-pane fade show active profile-overview" id="profile-overview" role="tabpanel">
+                                                <h5  class="card-title" >작성자</h5>
+                                                <p class="card-text userName" style="font-weight: bold;">[[${cont.userNickname}]] &nbsp;&nbsp;&nbsp;<i class="bi bi-chat-square-text" style="cursor:pointer;"></i></p>
+
+                                                <hr>
+                                                <br>
+
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-4 label ">제목</div>
+                                                    <div class="col-lg-9 col-md-8">[[${cont.title}]]</div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-4 label">조회수</div>
+                                                    <div class="col-lg-9 col-md-8">[[${cont.viewCnt}]]</div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-3 col-md-4 label">작성일</div>
+                                                    <div class="col-lg-9 col-md-8">[[${cont.createdAt.toString().substring(0, 10)}]]</div>
+                                                </div>
+
+                                                <div class="row" th:if="${!#strings.isEmpty(cont.updatedAt)}">
+                                                    <div class="col-lg-3 col-md-4 label">수정일</div>
+                                                    <div class="col-lg-9 col-md-8">[[${cont.updatedAt.toString().substring(0, 10)}]]</div>
+                                                </div>
+
+                                            </div>
+                                            <br>
+                                            <hr>
+                                            <br>
+                                        </div>
+                                        <h5 class="card-title">내용</h5>
+                                        <p class="card-text"></p>
+                                        <div class="d-flex" th:text="${cont.cont}"></div>
+
+                                    </div>
+
+                                    <br> <br>
+
+                                    <div class="align-content-start">
+                                        <input type="button" class="btn btn-dark" value="블러처리" th:onclick="|if(confirm('게시글을 블러 처리할까요?')) {
+                                                                                                             location.href='board_mod?no=${cont.boardNum}&page=${page}'
+                                                                                                }else {return; }|">&nbsp;&nbsp;
+                                        <input type="button" class="btn btn-dark" value="삭제하기" th:onclick="|if(confirm('게시글을 삭제할까요?')) {
+                                                                                                             location.href='board_del?no=${cont.boardNum}&page=${page}'
+                                                                                                }else {return; }|">&nbsp;&nbsp;
+                                        <input th:if="${man == 1}" type="button" class="btn btn-dark" value="목록으로" th:onclick="|location.href='board?page=${page}'|">
+
+                                        <input th:if="${man == 0}" type="button" class="btn btn-dark" value="목록으로" th:onclick="|location.href='main'|">
+                                    </div>
+
+                                    <br> <br>
+                                    <!-- 댓글 목록 -->
+                                    <div>
+                                        <h5 class="card-title">댓글 목록</h5>
+                                        <ul>
+                                            <li th:each="reply : ${rList}" style="background-color: #f8f9fa; color: #343a40; margin: 10px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;">
+                                                <p><span id="userId" th:text="${reply.id}">작성자</span>: <span id="cont" th:text="${reply.cont}"></span></p>
+                                                <p th:text="${#strings.substring(reply.date.toString(), 0, 10)}"></p>
+                                                <p><i class="bi bi-trash" th:onclick="|if(confirm('댓글을 삭제할까요?')) {
+                                                                                                             location.href='rpl_del?no=${reply.replyNum}&bno=${cont.boardNum}&page=${page}'
+                                                                                                }else {return; }|"></i></p>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+
+<script>
+
+    $(document).ready(function() {
+
+        $('.bi-chat-square-text').click(function() {
+
+            let user = $(this).closest('.tab-pane').find('.userName').text().trim();
+
+            location.href='/chat-to/' + user;
+
+        });
+
+    });
+
+</script>
+
+</body>
+
+</html>

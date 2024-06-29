@@ -1,0 +1,48 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+</head>
+
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>홈</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a th:href="@{#}">Home</a></li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-6">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">예시 페이지</h5>
+                        <p>예시</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+
+</body>
+
+</html>

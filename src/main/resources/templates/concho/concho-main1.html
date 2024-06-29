@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}"><title>감자팀</title></head>
+<style>
+    /* 부모 요소에 맞게 object 태그의 크기를 조정 */
+    .card-body object {
+        width: 100%;
+        height: 80%;
+    }
+    /* SVG가 부모 요소의 크기에 맞게 조정되도록 설정 */
+    .card-body svg {
+        width: 100%;
+        height: 80%;
+    }
+    #card1{
+        height: 100vh;
+    }
+    #myMap-body {
+        width: 100%;
+        height: 100%;
+    }
+    .btn {
+        margin-top: 1rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        width: 20%;
+    }
+    .card-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    @media (max-width: 500px) {
+        #card1{
+            height: 100%;
+        }
+        #myMap-body {
+            width: 100%;
+            height: 100%;
+        }
+        /* 부모 요소에 맞게 object 태그의 크기를 조정 */
+        .card-body object {
+            width: 100%;
+            height: 100%;
+        }
+        /* SVG가 부모 요소의 크기에 맞게 조정되도록 설정 */
+        .card-body svg {
+            width: 100%;
+            height: 100%;
+        }
+        .left-right-button .btn {
+            margin-top: 1rem;
+            margin-left: 1rem;
+            margin-right: 1px;
+        }
+        #next-page{
+            margin-right: 0;
+        }
+    }
+</style>
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+    <div class="card" id="card1">
+        <div class="left-right-button">
+
+        </div>
+        <div class="card-body" id="myMap-body">
+            <h5 class="card-title">
+                분실한 지역을 선택해주세요!
+                <button id="next-page" type="button" class="btn btn-primary rounded-pill">다음</button>
+            </h5>
+
+            <span style="color: red; font-size: 1rem">선택지역 : </span><span style="color: blue;font-size: 1rem;" id="select-addr">서울특별시</span>
+            <object th:data="|@{/concho/map/map.svg}|" id="map" type="image/svg+xml"  width="100%" height="100%"></object>
+        </div>
+    </div>
+</main>
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script>
+    let beforeClickId = '서울특별시';
+    let beforeClickColor = 'blue';
+
+    $(document).ready(function () {
+        $('#next-page').on('click', function () {
+            location.href='/concho/main/2?selectedLoc='+beforeClickId;
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        function initializeMap() {
+            let objectElement = document.getElementById('map');
+            let svgDoc = objectElement.contentDocument;
+
+            if (!svgDoc || svgDoc.readyState !== 'complete') return; // SVG 파일이 아직 로드되지 않음
+
+            clearInterval(loadCheckInterval); // 인터벌을 중지
+
+            let regions = svgDoc.querySelectorAll('path');
+
+            regions.forEach(function(region) {
+                function handleClick() {
+                    // 이전 선택 초기화
+                    svgDoc.getElementById(beforeClickId).setAttribute('fill', beforeClickColor);
+                    beforeClickId = this.id;
+                    beforeClickColor = this.getAttribute('fill');
+                    // 갱신
+                    document.getElementById('select-addr').innerText = this.id;
+                    this.setAttribute('fill', 'red');
+                }
+
+                region.addEventListener('click', handleClick);
+                region.addEventListener('touchstart', handleClick); // 터치 이벤트 추가
+            });
+        }
+
+        // 인터벌을 사용하여 SVG 파일이 로드되었는지 확인
+        let loadCheckInterval = setInterval(initializeMap, 100);
+
+        document.getElementById('map').addEventListener('load', initializeMap);
+    }, { passive: true });
+</script>
+
+</body>
+</html>

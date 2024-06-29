@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goott.potatoes.Hamster.mapper.pickupMapper">
+
+    <select id="max" resultType="int">
+        select max(pick_num) from pickup;
+    </select>
+
+    <insert id="pickupboard_write" parameterType="missing">
+        INSERT INTO pickup VALUES
+                ((SELECT IFNULL(MAX(pick_num), 0) FROM pickup ALIAS_FOR_SUBQUERY)+1,
+                 #{userId}, #{categoryId}, #{majorCategory}, #{minorCategory}, #{imgKey}, #{title}, #{cont}, #{location},
+                 null,0,NOW(),null);
+    </insert>
+
+    <select id="pickBoardList" resultType="pickup">
+        select * from pickup order by pick_num desc
+    </select>
+
+    <select id="pBoardCont" resultType="pickup" parameterType="int">
+        select * from pickup where pick_num = #{no}
+    </select>
+
+    <update id="pBoardModify" parameterType="pickup">
+        update pickup set major_category = #{majorCategory},minor_category=#{minorCategory},
+                           img_key=#{imgKey},title=#{title},cont=#{cont},location=#{location}
+        where pick_num = #{pickNum}
+    </update>
+
+    <delete id="pBoardDelete" parameterType="int">
+        delete from pickup where pick_num = #{pickNum}
+    </delete>
+
+    <update id="updateSequence" parameterType="int">
+        update pickup set pick_num = pickup.pick_num - 1 where pickup.pick_num > #{no}
+    </update>
+
+    <update id="pboard_hit" parameterType="int">
+        update pickup set view_cnt = view_cnt + 1 where pick_num = #{no}
+    </update>
+</mapper>

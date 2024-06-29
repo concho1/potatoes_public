@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.esh.boardMapper.BoardMapper">
+    <select id="getListCount" resultType="int">
+        select count(*) from board
+    </select>
+
+    <select id="decoGetBoardList" resultType="Board">
+        select * from board order by board_num desc
+    </select>
+
+    <select id="getBoardList" parameterType="Page" resultType="Board">
+        <![CDATA[
+        select * from
+            (select row_number() over(order by board_num desc) rnum, b.* from board b) as sub
+        where rnum >= #{startNo} and rnum <= #{endNo}
+        ]]>
+    </select>
+
+    <insert id="insertBoard" parameterType="Board">
+        INSERT INTO board
+        VALUES (
+                (SELECT IFNULL(MAX(board_num), 0) FROM board ALIAS_FOR_SUBQUERY)+1,
+                #{userId}, #{imgKey},
+                #{title}, #{cont}, 0, now(), NULL, #{userNickname}
+                )
+    </insert>
+
+    <select id="boardContent" parameterType="int" resultType="Board">
+        SELECT * FROM board WHERE board_num = #{no};
+    </select>
+
+    <update id="viewCount" parameterType="int">
+        UPDATE board SET view_cnt = view_cnt+1 WHERE board_num = #{no}
+    </update>
+
+    <update id="updateBoard" parameterType="Board">
+        UPDATE board SET img_key=#{imgKey}, title=#{title}, cont=#{cont}, updated_at=now()
+        WHERE board_num=#{boardNum}
+    </update>
+
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM board WHERE board_num=#{no}
+    </delete>
+
+    <update id="updateSeq" parameterType="int">
+        UPDATE board SET board_num = board_num - 1 WHERE board_num > #{no}
+    </update>
+
+    <select id="searchBoardCount" parameterType="map" resultType="int">
+        select count(*) from board
+        <if test="Field=='title'">
+            where title like concat('%', #{Keyword}, '%')
+        </if>
+
+        <if test="Field=='cont'">
+            where cont like concat('%', #{Keyword}, '%')
+        </if>
+
+        <if test="Field=='userNickname'">
+            where user_nickname like concat('%', #{Keyword}, '%')
+        </if>
+    </select>
+
+   <!-- <select id="searchBoardList" parameterType="Page" resultType="Board">
+        select * from
+         (
+            select row_number() over(order by board_num desc) rnum, b.* from board b
+            <choose>
+                <when test="field == 'title'">
+                    where title like concat('%', #{keyword}, '%')
+                </when>
+                <when test="field == 'cont'">
+                    where cont like concat('%', #{keyword}, '%')
+                </when>
+                <when test="field == 'userNickname'">
+                    where user_nickname like concat('%', #{keyword}, '%')
+                </when>
+                &lt;!&ndash;<otherwise>
+                    &#45;&#45; 기본 조건을 여기에 추가하십시오. 예를 들어, 모든 게시물을 검색하도록 설정합니다.
+                    where 1=1
+                </otherwise>&ndash;&gt;
+            </choose>
+        ) as rnum
+        <![CDATA[
+            where rnum >= #{startNo} and rnum <= #{endNo}
+        ]]>
+    </select>-->
+
+    <!-- Insert a new reply -->
+    <insert id="insertReply" parameterType="BoardReply">
+        INSERT INTO board_reply (
+            reply_num, board_num, id, depth, step, date, cont )
+            VALUES (
+             (SELECT IFNULL(MAX(reply_num), 0) FROM board_reply b) + 1,
+             #{boardNum}, #{id}, #{depth}, #{step}, NOW(), #{cont} )
+            order by date
+    </insert>
+
+    <!-- Get replies for a specific board -->
+    <select id="getBoardReplies" parameterType="int" resultType="BoardReply">
+        SELECT * FROM board_reply WHERE board_num = #{boardNum} ORDER BY reply_num DESC
+    </select>
+
+    <select id="countReply" parameterType="int">
+        select count(*) as reply_count from board_reply where board_num=#{boardNum}
+    </select>
+
+    <delete id="deleteReply" parameterType="int">
+        delete from board_reply where reply_num=#{replyNum}
+    </delete>
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div align="center">
+        <hr>
+            <h3>자유게시판 글 작성</h3>
+        <hr>
+        <br><br>
+        <form method="post" action="board_insert_ok" enctype="multipart/form-data">
+
+            <table border="1">
+                <tr>
+                    <th>작성자</th>
+                    <td>
+                        <input name="userNickname">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>사진</th>
+                    <td>
+                        <input class="form-control form-control-lg" type="file" name="file" accept="image/*">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>제목</th>
+                    <td>
+                        <input name="title">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>내용</th>
+                    <td>
+                        <textarea cols="20" rows="20" name="cont"></textarea>
+                    </td>
+                </tr>
+         </table>
+        <br><br>
+            <input type="submit" value="완료">
+            <input type="reset" value="다시">
+        </form>
+
+    </div>
+
+</body>
+</html>

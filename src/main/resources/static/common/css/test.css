@@ -1,0 +1,26 @@
+.main{
+    border: 1px solid cadetblue;
+    margin: 5rem auto;
+    padding: 2rem 2rem 2rem 2rem;
+    width: 60%;
+}
+.sub{
+    border: 1px solid cadetblue;
+    padding: 1rem 1rem 1rem 1rem;
+}
+h3, form, button{
+    margin-top: 2rem;
+}
+.fileIn, p{
+    display: flex;
+    margin-top: 1rem;
+}
+.btn-primary{
+    margin-left: auto;
+}
+img{
+    margin-bottom: 1rem;
+    width: 95%;
+    height: 10rem;
+    object-fit: contain;
+}

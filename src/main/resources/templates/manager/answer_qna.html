@@ -1,0 +1,69 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+</head>
+
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Q&A 게시판</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section contact">
+        <div class="col-xl">
+            <div class="card p-4">
+
+                <div class="row gy-4">
+
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" name="title" th:value="${Cont.title}" readonly>
+                    </div>
+
+                    <div class="col-md-12">
+                        <textarea class="form-control" name="cont" rows="6"
+                                  style="resize: none;" readonly>[[${Cont.cont}]]</textarea>
+                    </div>
+
+                </div>
+                <hr>
+                <form action="answer_ok" method="post">
+                    <input type="hidden" name="page" th:value="${page}">
+                    <div class="row gy-4">
+                        <input type="hidden" name="num" th:value="${Cont.num}">
+                        <input type="hidden" name="qnaGroup" th:value="${Cont.qnaGroup}">
+                        <input type="hidden" name="nickname" th:value="${Cont.userNickname}">
+
+                        <div class="col-md-12">
+                            <textarea class="form-control" name="cont" rows="6" placeholder="내용" required style="resize: none;"></textarea>
+                        </div>
+
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-primary" type="submit">답변 등록</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+
+</body>
+
+</html>

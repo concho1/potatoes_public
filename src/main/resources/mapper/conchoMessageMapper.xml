@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.common.mapper.ConchoMessageMapper">
+    <insert id="insertMessage" parameterType="ConchoMessage">
+        INSERT INTO message (
+            msg_no,room_name ,send_user_nickname,rec_user_nickname,
+            cont,created_at,is_read
+        )
+        VALUES (
+           (SELECT IFNULL(MAX(msg_no), 0) FROM message m) + 1,
+           #{roomName}, #{sendUserNickname}, #{recUserNickname},  #{cont}, NOW(), 1
+        )
+   </insert>
+    <select id="findMessageListByRoomName" parameterType="String" resultType="ConchoMessage">
+        SELECT * FROM message WHERE room_name = #{roomName} ORDER BY created_at desc
+    </select>
+    <select id="findRoomByRecUserNickname" parameterType="String" resultType="ConchoMessage">
+        SELECT * FROM message WHERE rec_user_nickname = #{recUserNickname} ORDER BY created_at
+    </select>
+    <update id="updateIsReadToZero" parameterType="String">
+        UPDATE message
+        SET is_read = 0
+        WHERE room_name = #{roomName} AND rec_user_nickname = #{sendUserNickname}
+    </update>
+
+    <update id="updateSendNicknameMessages" parameterType="map">
+        UPDATE message
+        SET send_user_nickname = #{newNickname}
+        WHERE send_user_nickname = #{oldNickname}
+    </update>
+
+    <update id="updateRecNicknameMessages" parameterType="map">
+        UPDATE message
+        SET rec_user_nickname = #{newNickname}
+        WHERE rec_user_nickname = #{oldNickname}
+    </update>
+
+    <update id="updateRoomName" parameterType="map">
+        UPDATE message
+        SET room_name = REPLACE(room_name, #{oldNickname}, #{newNickname})
+        WHERE room_name LIKE CONCAT('%', #{oldNickname}, '%')
+    </update>
+
+    <delete id="deleteUserMessages" parameterType="String">
+        DELETE FROM message WHERE send_user_nickname = #{nickname} OR rec_user_nickname = #{nickname}
+    </delete>
+
+</mapper>
+

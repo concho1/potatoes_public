@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.potatoes.concho.mapper.UniqueCategoriesMapper">
+    <select id="getCategories" resultType="UniqueCategories">
+        SELECT * FROM unique_categories order by major_category desc
+    </select>
+
+    <select id="updateCate" resultType="UniqueCategories" parameterType="String">
+        select minor_category from unique_categories where major_category like  CONCAT('%', #{catemajor}, '%')
+    </select>
+</mapper>

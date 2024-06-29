@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>concho main</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" th:href="@{/common/css/style.css}">
+    <link rel="stylesheet" th:href="@{/common/css/media.css}">
+    <!-- defer 테그는 html 이 완전히 로딩된 이후 js 로딩한다는 뜻 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<section id="home" class="home">
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container mynav">
+
+            <a class="navbar-brand" href="#">
+                <!-- th:src="@{/common/images/potato.png}" -->
+                <img  th:src="${session.userImgUrl}" alt="logo">
+                <div class="logo-type">
+                    <h1 class="site-title m-0 p-0" th:text="${session.userNickname}"></h1>
+                    <small class="site-description">전국 분실물 찾기 서비스</small>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link current" th:href="@{#}">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="#">분실물 찾기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="#">분실물 지도</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="#">분실물 게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mylink" href="#">마이페이지</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                회원/비회원
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/login}"><span class="dropdown">로그인</span></a></li>
+                                <li><a class="dropdown-item" th:href="@{/main}"><span class="dropdown">회원가입</span></a></li>
+                                <li><a class="dropdown-item" href="#"><span class="dropdown">마이페이지</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- ---------------form------------ -->
+    <div class="banner">
+        <div class="container">
+            <form class="myform">
+                <input type="text" placeholder="분실물 전체 검색" id="search">
+                <input type="button" value="찾기" id="submit">
+            </form>
+        </div>
+    </div>
+
+    <div class="forecast-table">
+        <div class="container">
+            <div class="" id="forecast">
+                <div class="row p-0 m-0 forecast-container">
+                    <!-- ------------- 처음 --------- -->
+                    <div class="col-md-12 col-lg-4 p-0">
+
+                        <div class="accordion accordion-flush" id="accordionFlushExample1">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne3" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        [서울시 버스, 택시] 최신 습득물 정보
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne3" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample1">
+                                    <div class="accordion-body">
+                                        <table class="table-secondary">
+                                            <tr>
+                                                <th scope="col">습득물</th>
+                                                <th scope="col">회사</th>
+                                                <th scope="col">습득일</th>
+                                            </tr>
+                                            <tbody>
+                                            <tr th:each="seol : ${seoulList}">
+                                                <th:block th:if="${seol.getProductName().length() > 8}">
+                                                    <td th:text="${seol.getProductName().substring(0,6)+'...'}"></td>
+                                                </th:block>
+                                                <th:block th:unless="${seol.getProductName().length() > 8}">
+                                                    <td th:text="${seol.getProductName()}"></td>
+                                                </th:block>
+                                                <td th:text="${seol.getOrgName()}"></td>
+                                                <td th:text="${#strings.substring(seol.getDate(), 0, 10)}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ---------------form------------ // searchOption, dayOption, searchStr-->
+                        <div class="banner">
+                            <div class="container">
+                                <form class="myform" method="post" th:action="@{/concho/search-seoul}">
+                                    <input type="text" placeholder="분실물을 입력해주세요" name="searchStr">
+                                    <input type="hidden" name="dayOption" value="100">
+                                    <input type="hidden" name="searchOption" value="all">
+                                    <input type="submit" value="찾기" id="submit2">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- -------------next day--------- -->
+                    <div class="col-md-12 col-lg-4 p-0">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        [지하철, 버스] 최신 습득물 정보
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <table class="table-secondary">
+                                            <tr>
+                                                <th scope="col">습득물</th>
+                                                <th scope="col">회사</th>
+                                                <th scope="col">습득일</th>
+                                            </tr>
+                                            <tbody>
+                                            <tr>
+                                                <td>반찬가방</td>
+                                                <td>한성운수</td>
+                                                <td>2024-05-16</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="banner">
+                            <div class="container">
+                                <form class="myform">
+                                    <input type="text" placeholder="분실물을 입력해주세요" id="search3">
+                                    <input type="button" value="찾기" id="submit3">
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- -------------third day--------- -->
+                    <div class="col-md-12 col-lg-4 p-0">
+                        <div class="accordion accordion-flush" id="accordionFlushExample2">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        [지하철, 버스] 최신 습득물 정보
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne2" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
+                                    <div class="accordion-body">
+                                        <table class="table-secondary">
+                                            <tr>
+                                                <th scope="col">습득물</th>
+                                                <th scope="col">회사</th>
+                                                <th scope="col">습득일</th>
+                                            </tr>
+                                            <tbody>
+                                            <tr>
+                                                <td>반찬가방</td>
+                                                <td>한성운수</td>
+                                                <td>2024-05-16</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="banner">
+                            <div class="container">
+                                <form class="myform">
+                                    <input type="text" placeholder="분실물을 입력해주세요" id="search4">
+                                    <input type="button" value="찾기" id="submit4">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- footer -->
+    <footer class="myfoot">
+        <div class="container">
+            <div class="row footerRow">
+                <div class="col-md-3">
+                    <div class="social">
+                        <span>제작자들</span>
+                    </div>
+                    <div class="social">
+                        <a href="#"><i class="fa-brands fa-twitter"></i><span class="makers">준우</span></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i><span class="makers">홍민</span></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i><span class="makers">태근</span></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i><span class="makers">민영</span></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i><span class="makers">승현</span></a>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-4">2024 05 16</p>
+        </div>
+
+    </footer>
+</section>
+</body>
+
+</html>

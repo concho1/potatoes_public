@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goott.potatoes.Hamster.mapper.userMapperHam">
+    <select id="checkDupEmail" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM user
+        WHERE id = #{email}
+    </select>
+
+    <select id="checkDupNickname" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM user
+        WHERE nickname = #{nickname}
+    </select>
+
+    <select id="checkDupPwd" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM user
+        WHERE pwd = #{pwd}
+    </select>
+
+    <select id="checkPwdInfo" parameterType="map" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM user
+        WHERE nickname = #{nickname} AND id = #{email}
+    </select>
+
+    <update id="changePwd" parameterType="map">
+        update user set pwd = #{pwd} where nickname = #{nickname}
+    </update>
+
+    <insert id="joinUser" parameterType="userHam">
+        INSERT INTO user VALUES (#{id},#{imgKey},null,#{nickname},#{location},null,0,now(),null,0,#{pwd})
+    </insert>
+
+    <insert id="joinKakaoUser" parameterType="userHam">
+        INSERT INTO user VALUES (#{id},#{imgKey},null,#{nickname},null,null,0,now(),null,0,null)
+    </insert>
+
+    <select id="Login" parameterType="String" resultType="userHam">
+        SELECT * from user where id = #{id}
+    </select>
+
+    <update id="joinCnt">
+        update userCnt
+        set
+            user_count = CASE
+                             WHEN user_count >= 0 THEN user_count + 1
+                             ELSE user_count
+                END,
+            guest_count = CASE
+                              WHEN guest_count > 0 THEN guest_count - 1
+                              ELSE guest_count
+                END,
+            join_count = CASE
+                             WHEN join_count >= 0 THEN join_count + 1
+                             ELSE join_count
+                END
+        where date = curdate();
+    </update>
+
+    <update id="loginCnt">
+        update userCnt
+        set
+            user_count = CASE
+                             WHEN user_count >= 0 THEN user_count + 1
+                             ELSE user_count
+                END,
+            guest_count = CASE
+                              WHEN guest_count > 0 THEN guest_count - 1
+                              ELSE guest_count
+                END
+        where date = curdate()
+    </update>
+</mapper>

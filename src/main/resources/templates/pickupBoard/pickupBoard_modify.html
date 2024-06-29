@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{common/header-top :: header-top-fragment}">
+  <meta charset="UTF-8">
+  <title>감자팀</title>
+</head>
+<body>
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<div align="center">
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>습득물 수정</h1>
+      <div class="d-flex justify-content-center py-4">
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">게시판</a></li>
+            <li class="breadcrumb-item"><a href="index.html">습득물 게시판</a></li>
+            <li class="breadcrumb-item active" th:text="${cont.getTitle()}+' 습득물 수정'"></li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 align-items-center justify-content-center">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">게시글 수정</h5>
+
+              <!-- General Form Elements -->
+              <form method="post" th:action="@{/pickBoard_modify_ok(no=${cont.getPickNum()})}" enctype="multipart/form-data">
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">물건 분류</label>
+                  <div class="col-sm-8">
+                    <select name="majorCategory" onchange="categoryUpdate(this)">
+                      <option th:each="catemajorkey, i : ${catelist.keySet()}"
+                              th:value="${catemajorkey}"
+                              th:text="${catemajorkey}"
+                              th:data-catemajorkey="${catemajorkey}"
+                              th:selected="${catemajorkey == cont.getMajorCategory()}"></option>
+                    </select>
+
+                    <select id="categorySelect" name="minorCategory">
+                      <th:block th:each="minor : ${catelist.get(cont.getMajorCategory())}">
+                        <th:block th:if="${minor == cont.getMinorCategory()}">
+                          <option th:selected="${minor}" th:value="${minor}" th:text="${minor}"></option>
+                        </th:block>
+                        <th:block th:if="${minor != cont.getMinorCategory()}">
+                          <option th:value="${minor}" th:text="${minor}"></option>
+                        </th:block>
+                      </th:block>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">물건 지역 분류</label>
+                  <div class="col-sm-8">
+                    <select name="location">
+                      <option th:each="city : ${list}"
+                              th:text="${city}"
+                              th:value="${city}"
+                              th:selected="${city == cont.getLocation()}"></option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">작성자</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="user_id" class="form-control" th:value="${session.userNickname}"
+                           style="background-color: #8a8f97" readonly>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">물건이름</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" name="title" th:value="${cont.getTitle()}">
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <p>물건사진</p>
+                  <img id="preview-image" th:src="${cont.getImgKey()}" alt="프로필" style=" width: 240px; height: 190px;"><br><br>
+                  <div class="fileIn">
+                    <input id="fileAjax" type="file" name="file" accept="image/*" />
+                  </div>
+                </div>
+                <br><br>
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">물건 특징 설명</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" style="height: 100px" name="cont" th:text="${cont.getCont()}"></textarea>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-12">
+                    <button type="submit" class="btn btn-primary">게시글 수정하기</button>
+                    <button type="button" class="btn btn-primary" th:onclick="history.back()">수정 취소</button>
+                  </div><br>
+                </div>
+              </form><!-- End General Form Elements -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main><!-- End #main -->
+
+</div>
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script type="text/javascript" th:src="@{/ham/js/imageUpload.js}"></script>
+<script type="text/javascript" th:src="@{/ham/js/Category.js}"></script>
+</body>
+</html>

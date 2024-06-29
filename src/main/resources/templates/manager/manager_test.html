@@ -1,0 +1,689 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}"><title>감자팀</title></head>
+
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Admin Page</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Admin Page</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <div class="col-lg-8">
+                <div class="row">
+
+                    <!-- Sales Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+
+                            <div class="filter">
+                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start">
+                                        <h6>Filter</h6>
+                                    </li>
+
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1일</span></li>
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1주</span></li>
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1개월</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">접속 회원 <span>| </span><span class="period">1일</span></h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>[[${todayUser.userCount }]]</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span>
+                                        <span class="text-muted small pt-2 ps-1"></span>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End Sales Card -->
+
+                    <!-- Revenue Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card revenue-card">
+
+                            <div class="filter">
+                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start">
+                                        <h6>Filter</h6>
+                                    </li>
+
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1일</span></li>
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1주</span></li>
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1개월</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">접속 비회원 <span>| </span><span class="period">1일</span></h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-badge"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>[[${todayUser.guestCount }]]</h6>
+                                        <span class="text-success small pt-1 fw-bold"></span>
+                                        <span class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End Revenue Card -->
+
+                    <!-- Customers Card -->
+                    <div class="col-xxl-4 col-xl-12">
+
+                        <div class="card info-card customers-card">
+
+                            <div class="filter">
+                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start">
+                                        <h6>Filter</h6>
+                                    </li>
+
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1일</span></li>
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1주</span></li>
+                                    <li><span class="dropdown-item" style="cursor: pointer;">1개월</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">가입 회원 <span>| </span><span class="period">1일</span></h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person-plus"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>[[${todayUser.joinCount }]]</h6>
+                                        <span class="text-danger small pt-1 fw-bold"></span>
+                                        <span class="text-muted small pt-2 ps-1"></span>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div><!-- End Customers Card -->
+
+                    <!-- 누적 통계 -->
+                    <div class="col-12">
+                        <div class="card">
+
+                            <div class="card-body">
+                                <h5 class="card-title">누적 통계</h5>
+
+                                <!-- 막대 그래프 -->
+                                <canvas id="barChart"></canvas>
+
+                                <script src="/assets/vendor/chart.js/chart.js"></script>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+
+                                        let urls = ['#', '#', '#', '#', '#'];
+
+                                        let myCt = document.querySelector('#barChart');
+
+                                        let a = [[${todayUser.userCount + todayUser.guestCount }]];
+                                        let b = [[${todayUser.joinCount }]];
+                                        let c = [[${TotalUser + TotalGuest }]];
+                                        let d = [[${TotalJoin }]];
+                                        let e = [[${totalMissing}]];
+
+                                        let myChart = new Chart(myCt, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: ['일일 접속자 수', '일일 가입자 수', '누적 접속자 수', '누적 가입자 수', '누적 분실물 수'],
+                                                datasets: [{
+                                                    label: '이용자 수',
+                                                    data: [a, b, c, d, e],
+                                                    borderWidth: 1,
+                                                    backgroundColor: ['rgba(166, 23, 23, 0.2)', 'rgba(166, 125, 23, 0.2)', 'rgba(42, 166, 23, 0.2)', 'rgba(23, 106, 166, 0.2)', 'rgba(231, 75, 207, 0.2)'],
+                                                    borderColor: ['rgba(166, 23, 23, 0.81)', 'rgba(166, 125, 23, 0.81)', 'rgba(42, 166, 23, 0.81)', 'rgba(23, 106, 166, 0.81)', 'rgba(231, 75, 207, 0.81)'],
+                                                    maxBarThickness: 30
+                                                }]
+                                            } ,
+                                            options: {
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true
+                                                    }
+                                                },
+                                                onClick: (event, elements) => {
+                                                    if (elements.length > 0) {
+                                                        const element = elements[0];
+                                                        const datasetIndex = element.datasetIndex;
+                                                        const dataIndex = element.index;
+                                                        const label = myChart.data.labels[dataIndex];
+                                                        const value = myChart.data.datasets[datasetIndex].data[dataIndex];
+                                                        if(label === '누적 분실물 수') {
+                                                            document.querySelector(".board").focus();
+                                                            document.querySelector("#board_type").textContent = "분실물 게시판";
+                                                            getList("분실");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                    });
+
+                                </script>
+                                <!-- End 막대 그래프 -->
+
+                            </div>
+
+                        </div>
+                    </div><!-- End 누적 통계 -->
+
+                    <!-- FAQ -->
+                    <div class="col-12">
+                        <div class="card recent-sales overflow-auto">
+
+                            <div class="filter">
+                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start">
+                                        <h6>To Go</h6>
+                                    </li>
+
+                                    <li><a class="dropdown-item" href="../qna/list">상세내역</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">Q&A</h5>
+
+                                <table class="table table-borderless datatable">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">작성자</th>
+                                        <th scope="col">제목</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">답변하기</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="qna : ${QList}">
+                                        <th scope="row" class="align-middle">[[${qna.userNickname}]]</th>
+                                        <td class="align-middle">[[${qna.title}]]</td>
+                                        <td class="align-middle">
+                                            <span th:if="${qna.qnaStatus == 0}" class="badge bg-dark">답변대기</span>
+                                            <span th:if="${qna.qnaStatus == 1}" class="badge bg-success">답변완료</span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <input th:if="${qna.qnaStatus == 0}" type="button" class="btn btn-dark btn-sm" value="답변하기"
+                                                   th:onclick="|location.href='@{answer_qna(no=${qna.num})}'|">
+                                            <input th:if="${qna.qnaStatus != 0}" type="button" class="btn btn-dark btn-sm" value="답변하기"
+                                                   th:onclick="|location.href='#'|" disabled>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div><!-- End Recent Sales -->
+
+                    <!-- Top Selling -->
+                    <div class="col-12 board" tabindex="0" onfocus="this.style.outline='none'">
+                        <div class="card top-selling overflow-auto">
+
+                            <div class="filter">
+                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start">
+                                        <h6>Filter</h6>
+                                    </li>
+
+                                    <li><span class="dropdown-item board_item" style="cursor: pointer;">자유 게시판</span></li>
+                                    <li><span class="dropdown-item board_item" style="cursor: pointer;">분실물 게시판</span></li>
+                                    <li><span class="dropdown-item board_item" style="cursor: pointer;">습득물 게시판</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body pb-0">
+                                <h5 class="card-title">게시판 <span>| </span><span class="period" id="board_type" style="cursor: pointer;">자유 게시판</span></h5>
+
+                                <table class="table table-borderless">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 20%">닉네임</th>
+                                        <th scope="col" style="width: 40%">제목</th>
+                                        <th scope="col" style="width: 20%">조회수</th>
+                                        <th scope="col" style="width: 20%">작성일</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tab_body">
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div><!-- End Top Selling -->
+
+                </div>
+            </div><!-- End Left side columns -->
+
+            <!-- Right side columns -->
+            <div class="col-lg-4">
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6>To Go</h6>
+                            </li>
+
+                            <li><a class="dropdown-item" href="users">상세내역</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">회원 관리</h5>
+
+                        <table class="table table-borderless table-responsive">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="width: 40%;">가입일</th>
+                                <th scope="col" style="width: 20%;">아이디</th>
+                                <th scope="col" style="width: 40%;">닉네임</th>
+                            </tr>
+                            </thead>
+
+                            <tr th:if="${not #strings.isEmpty(UList)}" th:each="dto : ${UList}">
+                                <td class="align-middle" th:text="${dto.createdAt.toString().substring(5, 10) }"></td>
+                                <td class="align-middle" th:text="${dto.id }"></td>
+                                <td class="align-middle" th:text="${dto.nickname }"></td>
+                            </tr>
+
+
+
+
+
+
+                        </table>
+
+                    </div>
+                </div><!-- End Recent Activity -->
+
+                <!-- Budget Report -->
+                <div class="card">
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">F.A.Q <span>| </span><span th:onclick="|location.href='../qna/faq'|" style="cursor: pointer;">게시판</span></h5>
+
+                        <div class="accordion accordion-flush" id="faq-group-1">
+
+                            <div class="accordion-item" th:each="dto : ${FList}">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" th:data-bs-target="'#faqsOne-' + ${dto.num}" type="button" data-bs-toggle="collapse">
+                                        <b>[[${dto.title}]]</b>
+                                    </button>
+                                </h2>
+                                <div th:id="'faqsOne-' + ${dto.num}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
+                                    <div class="accordion-body">
+                                        <pre>[[${dto.cont}]]<pre>
+                                    </div>
+                                    <br>
+                                    <button class="btn btn-dark btn-sm" data-bs-toggle="modal" th:data-bs-target="'#basicModal'+${dto.num}">
+                                        수정하기
+                                    </button>
+                                    <div class="modal fade" th:id="'basicModal'+${dto.num}" tabindex="-1" >
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">F.A.Q 수정 - [[${dto.title}]]</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="post" action="update_faq" th:onsubmit="return check()">
+                                                    <div class="modal-body">
+
+                                                            <div class="mb-3">
+                                                                <input type="hidden" name="num" th:value="${dto.num}">
+                                                                <label for="title" class="form-label">제목</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" name="title" class="form-control" id="title" aria-describedby="basic-addon3 basic-addon4" th:value="${dto.title}">
+                                                                </div>
+                                                            </div>
+
+                                                            <br>
+
+                                                            <div class="mb-3">
+                                                                <label for="cont" class="form-label">내용</label>
+                                                                <div class="input-group">
+                                                                    <textarea name="cont" rows="6" class="form-control"
+                                                                              aria-label="With textarea" id="cont" style="resize: none;">[[${dto.cont}]]</textarea>
+                                                                </div>
+                                                            </div>
+
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                        <button type="submit" class="btn btn-primary">수정하기</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div><!-- End Basic Modal-->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <br>
+
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-dark btn-sm justify-content-end" data-bs-toggle="modal" data-bs-target="#inputFAQ">
+                                FAQ 추가
+                            </button>
+                            <div class="modal fade" id="inputFAQ" tabindex="-1" >
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">F.A.Q 추가</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post" action="insert_faq">
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label for="insertTitle" class="form-label">제목</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="insertTitle" class="form-control" id="insertTitle" aria-describedby="basic-addon3 basic-addon4">
+                                                    </div>
+                                                </div>
+
+                                                <br>
+
+                                                <div class="mb-3">
+                                                    <label for="insertCont" class="form-label">내용</label>
+                                                    <div class="input-group">
+                                                        <textarea name="insertCont" rows="6" class="form-control"
+                                                                  aria-label="With textarea" id="insertCont" style="resize: none;"></textarea>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                                <button type="submit" class="btn btn-primary">등록하기</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div><!-- End Basic Modal-->
+                        </div>
+                        <br>
+                    </div>
+                </div><!-- End Budget Report -->
+
+                <div class="card">
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">경찰청 위치 Excel 파일 등록</h5>
+
+                        <div class="news">
+                            <div class="post-item clearfix">
+                                <form th:action="@{/police/section}" method="post" enctype="multipart/form-data">
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" aria-describedby="button-addon2">
+                                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">업로드</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div><!-- End sidebar recent posts-->
+
+                    </div>
+                    <br>
+                </div><!-- End News & Updates -->
+
+
+            </div><!-- End Right side columns -->
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+
+<script>
+    $(() => {
+
+        getInfo();
+
+        let boardType = $('#board_type').text().substring(0, 2);
+        getList(boardType);
+
+        $(".dropdown-item").on('click', function() {
+            let value = $(this).text();
+            let title = $(this).closest('.card').find('.card-title').text().substring(0, 2);
+            let type = $(this).closest('.card').find('.card-title').text().substring(3, 5);
+            let count = 0;
+            switch (value.substring(1, 2)) {
+                case '주':
+                    count = 7;
+                    break;
+                case '개':
+                    count = 30;
+                    break;
+            }
+
+            let result = getCount(count, title, type);
+
+
+            $(this).closest('.card').find('.period').text(value);
+            $(this).closest('.card').find('.ps-3 h6').text(result);
+
+            getInfo();
+
+        });
+
+        $('.board_item').click(function() {
+           let typ = $(this).text().substring(0, 2);
+
+           getList(typ);
+
+           $('#board_type').text($(this).text());
+
+           boardType = typ.substring(0, 2);
+        });
+
+        $('#board_type').click(function () {
+
+           console.log(boardType);
+
+           if(boardType === "자유") {
+               location.href="board"
+           }else if(boardType === "분실"){
+               location.href="missing"
+           }else {
+               location.href="pickup"
+           }
+        });
+
+    });
+
+    function getCount(count, title, type) {
+        let result;
+        $.ajax({
+            type: 'post',
+            url: 'count',
+            data: {
+                count : count,
+                title : title,
+                type : type
+            },
+            dataType: 'text',
+            async : false,
+            success: function(res) {
+                result = res;
+            },
+            error: function() {
+                alert("데이터 통신 오류");
+            }
+        })
+        return result;
+    }
+
+    function getInfo() {
+        // 기간
+        let userPeriod = document.querySelector('.sales-card .period').textContent;
+        let guestPeriod = document.querySelector('.revenue-card .period').textContent;
+        let joinPeriod = document.querySelector('.customers-card .period').textContent;
+
+        // 현재 값
+        let conUser = document.querySelector('.sales-card .ps-3 h6').textContent;
+        let conGuest = document.querySelector('.revenue-card .ps-3 h6').textContent;
+        let conJoin = document.querySelector('.customers-card .ps-3 h6').textContent;
+
+        $.ajax({
+            type: 'post',
+            url: 'info',
+            data: {
+                userPeriod : userPeriod,
+                guestPeriod : guestPeriod,
+                joinPeriod : joinPeriod
+            },
+            dataType: 'text',
+            success : function(res) {
+                let count = res.split(":");
+                let befUser = count[0];
+                let befGuest = count[1];
+                let befJoin = count[2];
+
+                if(conUser - befUser >= 0) {
+                    let userCnt = conUser - befUser;
+                    document.querySelector('.sales-card .ps-3 .text-success').textContent = userCnt.toLocaleString() + " people ";
+                    document.querySelector('.sales-card .ps-3 .text-muted').textContent = "increase"
+                }else {
+                    let userCnt = befUser - conUser;
+                    document.querySelector('.sales-card .ps-3 .text-success').textContent = userCnt.toLocaleString() + " people ";
+                    document.querySelector('.sales-card .ps-3 .text-muted').textContent = "decrease"
+                }
+
+                if(conGuest - befGuest >= 0) {
+                    let guestCnt = conGuest - befGuest;
+                    document.querySelector('.revenue-card .ps-3 .text-success').textContent = guestCnt.toLocaleString() + " people ";
+                    document.querySelector('.revenue-card .ps-3 .text-muted').textContent = "increase"
+                }else {
+                    let guestCnt = befGuest - conGuest;
+                    document.querySelector('.revenue-card .ps-3 .text-success').textContent = guestCnt.toLocaleString() + " people ";
+                    document.querySelector('.revenue-card .ps-3 .text-muted').textContent = "decrease"
+                }
+
+                if(conJoin - befJoin >= 0) {
+                    let joinCnt = conJoin - befJoin;
+                    document.querySelector('.customers-card .ps-3 .text-danger').textContent = joinCnt.toLocaleString() + " people ";
+                    document.querySelector('.customers-card .ps-3 .text-muted').textContent = "increase"
+                }else {
+                    let joinCnt = befJoin - conJoin;
+                    document.querySelector('.customers-card .ps-3 .text-danger').textContent = joinCnt.toLocaleString() + " people ";
+                    document.querySelector('.customers-card .ps-3 .text-muted').textContent = "decrease"
+                }
+
+            },
+            error : function() {
+                alert("info 중 데이터 오류");
+            }
+        })
+
+    }
+
+    function getList(boardType) {
+        $.ajax({
+            type: 'post',
+            url: 'board_main',
+            data: {
+                boardType : boardType
+            },
+            dataType: 'json',
+            success: function(res) {
+
+                $('#tab_body').empty();
+
+                $.each(res, function(i) {
+
+                    let txt = "<tr><th>" + res[i].nickname + "</th>";
+
+                    if(boardType === "자유") {
+                        txt = txt + "<td><a href='board_cont?no=" + res[i].num + "&page=1&man=0'>" + res[i].title + "</a></td>"
+                    }else if(boardType === "분실") {
+                        txt = txt + "<td><a href='missing_cont?no=" + res[i].num + "&page=1&man=0'>" + res[i].title + "</a></td>"
+                    }else if(boardType === "습득") {
+                        txt = txt + "<td><a href='pickup_cont?no=" + res[i].num + "&page=1&man=0'>" + res[i].title + "</a></td>"
+                    }
+
+                    txt = txt + "<td>" + res[i].view_cnt + "</td>" +
+                            "<td>" + res[i].created_at + "</td></tr>";
+
+                   $('#tab_body').append(txt);
+                });
+            },
+            error: function() {
+                alert("게시판 로드 중 오류 발생")
+            }
+        })
+    }
+</script>
+<script th:inline="javascript">
+    function check() {
+        let conf = false;
+        if(confirm('수정하시겠습니까?')) {
+            conf = true;
+        }
+        return conf;
+    }
+</script>
+</body>
+
+</html>

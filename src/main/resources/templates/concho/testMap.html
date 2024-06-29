@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>행정지도</title>
+    <style>
+        body, html {
+            margin: 0;
+            height: 100%;
+        }
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        .left {
+            flex: 0 0 70%;
+            padding: 20px;
+        }
+        .right {
+            flex: 1;
+            padding: 20px;
+        }
+    </style>
+    <!-- defer 태그는 HTML이 완전히 로딩된 이후 JS 로딩한다는 뜻 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- SVG 파일을 포함  th:data="@{concho/map/map.svg}"
+<object id="map" type="image/svg+xml"  data="/concho/map/map.svg" width="100%" height="100%"></object>
+-->
+<div class="container">
+    <div class="left">
+        <object id="map" type="image/svg+xml" th:data="@{/concho/map/map.svg}" width="100%" height="100%"></object>
+    </div>
+    <div class="right">
+        <h1>분실한 지역을 선택해 주세요!</h1>
+        <h3>현재 지역 : <span id="addr"></span></h3>
+        <h3><span style="color: red">선택지역 : </span><span style="color: blue" id="select-addr"></span></h3>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        let color;
+        let selectAddr = 'seoul';
+        $('#map').on('load', function() {
+            let svgDoc = this.contentDocument || this.getSVGDocument();
+            let $regions = $(svgDoc).find('path');
+
+            $regions.each(function() {
+                console.log($(this).attr('id'));
+            });
+
+            $regions.on('mouseover', function() {
+                let location = $(this).attr('id');
+                color = $(this).attr('fill');
+                $(this).css('fill', '#FF0000');
+                $('#addr').text(location);
+            });
+
+            $regions.on('mouseout', function() {
+                $(this).css('box-shadow', '0');
+                $(this).css('fill', color);
+            });
+
+            $regions.on('click', function() {
+                let location = $(this).attr('id');
+                //alert('클릭한 지역: ' + location);
+                $('#select-addr').text(location);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

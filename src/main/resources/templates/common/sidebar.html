@@ -1,0 +1,243 @@
+<aside th:fragment="sidebar-fragment" id="sidebar" class="sidebar">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on('click','#chatLink1',function (event) {
+                event.preventDefault();  // 기본 링크 동작을 막음
+                var recipient = prompt("메시지를 보낼 사람의 닉네임을 입력하세요:");
+                if (recipient) {
+                    window.location.href = '/chat-to/' + recipient;
+                }
+            });
+        });
+    </script>
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" th:href="@{/concho/main}">
+                    <i class="bi bi-grid"></i>
+                    <span>홈 (분실물 통합검색)</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+
+            <li class="nav-item">
+                <!-- collapsed class 적용안하면 active -->
+                <a class="nav-link" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#"
+                   th:classappend="${isSearchPresent} ? '' : ' collapsed'">
+                    <i class="bi bi bi-search"></i><span>분실물 찾기</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <!-- class="nav-content collapse show" 로 하면 아코디언 열림 -->
+                <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                    th:classappend="${isSearchPresent} ? ' show' : ''">
+                    <li>
+                        <a th:href="@{/concho/search/all}">
+                            <i class="bi bi-circle"></i><span>&#128270; 통합 검색</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/concho/search/seoul}">
+                            <i class="bi bi-circle"></i><span>서울시 습득물</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/concho/search/police}">
+                            <i class="bi bi-circle"></i><span>경찰청 습득물</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/concho/search/public}">
+                            <i class="bi bi-circle"></i><span>공원, 지하철, 백화점 등<br>기타 습득물</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Components Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#"
+                   th:classappend="${side_chk} ? '' : ' collapsed'">
+                <i class="bi bi-layout-text-window-reverse"></i><span>게시판</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav"
+                    th:classappend="${side_chk} ? ' show' : ''">
+                    <li>
+                        <a th:href="@{/deco_board_list}">
+                            <i class="bi bi-circle"></i><span>자유 게시판</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/missing_Board_list}">
+                            <i class="bi bi-circle"></i><span>분실물 게시판</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/pickup_Board_list}">
+                            <i class="bi bi-circle"></i><span>습득물 게시판</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/missingBoard_write}">
+                            <i class="bi bi-circle"></i><span>분실물 / 습득물 등록</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Tables Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link " data-bs-target="#qna-nav" data-bs-toggle="collapse" href="#" th:classappend="${side} ? '' : 'collapsed'">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Q&A</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="qna-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav" th:classappend="${side} ? 'show' : ''">
+                    <li>
+                        <a th:href="@{/qna/faq}">
+                            <i class="bi bi-circle"></i><span>자주 묻는 질문</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/qna/list}">
+                            <i class="bi bi-circle"></i><span>Q&A</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/qna/write}">
+                            <i class="bi bi-circle"></i><span>질문하기</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Tables Nav -->
+
+            <li class="nav-item" th:if="${session.userRank != null && session.userRank.toString() == 'manager'}">
+                <a class="nav-link " data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#" th:classappend="${side_manager} ? '' : 'collapsed'">
+                    <i class="bi bi-bar-chart"></i><span>관리자</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav" th:classappend="${side_manager} ? 'show' : ''">
+                    <li>
+                        <a th:href="@{/manager/main}">
+                            <i class="bi bi-circle"></i><span>관리자 메인</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/qna/list}">
+                            <i class="bi bi-circle"></i><span>Q&A</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/manager/users}">
+                            <i class="bi bi-circle"></i><span>회원 관리</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#manager-users-nav" data-bs-toggle="collapse" th:href="@{#}" th:classappend="${side_manager_board} ? '' : 'collapsed'">
+                            <i class="bi bi-circle"></i><span>게시판 관리</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="manager-users-nav" class="nav-content collapse" data-bs-parent="#charts-nav" th:classappend="${side_manager_board} ? 'show' : ''">
+                            <li>
+                                <a th:href="@{/manager/board}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-circle-fill"></i><span>자유 게시판</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a th:href="@{/manager/missing}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-circle-fill"></i><span>분실물 게시판</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a th:href="@{/manager/pickup}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-circle-fill"></i><span>습득물 게시판</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li><!-- End Charts Nav -->
+
+            <li class="nav-heading">회원 서비스</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" th:href="@{/myPage}">
+                    <i class="bi bi-person"></i>
+                    <span>마이페이지</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" id="chatLink1" href="#">
+                    <i class="bi bi-envelope"></i>
+                    <span>메세지 보내기</span>
+                </a>
+            </li><!-- End Contact Page Nav -->
+
+            <div th:if="${session.userId == null}">
+            <li class="nav-item">
+                <a class="nav-link collapsed" th:href="@{/join}">
+                    <i class="bi bi-card-list"></i>
+                    <span>회원가입</span>
+                </a>
+            </li><!-- End Register Page Nav -->
+            </div>
+
+            <div th:if="${session.userId == null}">
+            <li class="nav-item">
+                <a class="nav-link collapsed" th:href="@{/login}">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>로그인</span>
+                </a>
+            </li><!-- End Login Page Nav -->
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" th:href="@{/qna/faq}">
+                    <i class="bi bi-question-circle"></i>
+                    <span>문의하기</span>
+                </a>
+            </li><!-- End F.A.Q Page Nav -->
+            <li>
+                <div>
+                    <style>
+                        .image {
+                            width: 50px;
+                            height: 80px;
+                            transition: transform 0.3s, filter 0.3s; /* 부드러운 전환 효과 추가 */
+                            bottom: 0; /* 화면의 맨 아래에 위치 */
+                            position: fixed; /* 페이지에 고정 */
+                        }
+
+                        .image:hover {
+                            transform: translateX(20px) scale(7); /* 오른쪽으로 20px 이동 */
+                            filter: brightness(1.2); /* 이미지 밝기 증가 */
+                        }
+
+                        @media (max-width: 768px) {
+                            .image {
+                                width: 100px;
+                                height: 150px;
+                                transform: none; /* 모바일에서는 이동과 확대를 하지 않음 */
+                                filter: none; /* 모바일에서는 밝기 증가를 하지 않음 */
+                            }
+
+                            .image:hover {
+                                transform: translateX(10px) scale(1.05); /* 모바일에서는 적게 이동하고 조금만 확대 */
+                            }
+                        }
+
+                        @media (max-width: 480px) {
+                            .image {
+                                width: 80px;
+                                height: 120px;
+                            }
+
+                            .image:hover {
+                                transform: translateX(5px) scale(1.05);
+                            }
+                        }
+                    </style>
+                    <img th:src="@{/common/images/hamster.png}" alt="Your Image" class="image" width="150px" height="230px" onclick="alert('햄녕하세요')">
+
+                </div>
+            </li>
+
+        </ul>
+
+</aside>

@@ -1,0 +1,111 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}">
+    <title>감자팀</title>
+</head>
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main id="main" class="main">
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <div class="card">
+                    <div class="card-body" style="margin: 0 0 0 0; padding: 0">
+
+                        <!-- Basic Modal -->
+                        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#basicModal">
+                            <img style="width: 100%;" th:src="${cont.getImgKey()}" class="card-img" alt="...">
+                        </button>
+                        <div class="modal fade" id="basicModal" tabindex="-1" >
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" th:text="${cont.getUserId()}"></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img th:src="${cont.getImgKey()}" class="card-img" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Basic Modal-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="tab-content pt-2">
+
+                        <div class="tab-pane fade show active profile-overview" id="profile-overview" role="tabpanel">
+                            <h5  class="card-title" >조회수</h5>
+                            <p class="card-text" style="font-weight: bold;" th:text="${cont.getViewCnt()}"></p>
+
+                            <h5  class="card-title" >분실물</h5>
+                            <p class="card-text" style="font-weight: bold;" th:text="${cont.getTitle()}"></p>
+                            <p class="card-text" style="font-weight: bold;" th:text="${cont.getMajorCategory()+'[ '+cont.getMinorCategory()+' ]'}"></p>
+
+                            <h5 class="card-title">상세정보</h5>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">잃어버린 사람</div>
+                                <div class="col-lg-9 col-md-8" th:text="${cont.getUserId()}">Kevin Anderson</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">잃어버린 곳</div>
+                                <div class="col-lg-9 col-md-8" th:text="${cont.getLocation()}"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">잃어버린 날짜</div>
+                                <div class="col-lg-9 col-md-8" th:text="${cont.getCreatedAt().toString().substring(0,10)}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="card-title">내용</h5>
+                    <p class="card-text" th:utext="${cont.cont}"></p>
+                    <br><br><br>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button onclick="history.back()" type="button" class="btn btn-primary rounded-pill">뒤로가기</button>
+                        <div class="d-flex justify-content-center align-items-center" th:if="${session.userNickname != cont.getUserId()}">
+                            <input type="button" class="btn btn-primary rounded-pill" id="missChatLink" value="메세지 보내기" style="margin-left: 4rem;">
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="d-flex justify-content-center align-items-center" th:if="${session.userNickname == cont.getUserId()}">
+                            <button type="button" class="btn btn-primary rounded-pill" th:onclick="|location.href='@{/mboard_modify(no=${cont.getMisNum()})}'|">게시글 수정하기</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary rounded-pill" th:onclick="|if(confirm('게시글을 삭제하시겠습니까?')){location.href='@{/mboard_delete(no=${cont.getMisNum()})}'}else{
+                                        return}|">게시글 삭제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+    </section>
+</main>
+<!-- -->
+<script th:inline="javascript">
+    let name = /*[[${cont.getUserId()}]]*/ null;
+    $(document).ready(function () {
+        $(document).on('click','#missChatLink',function (event) {
+            event.preventDefault();  // 기본 링크 동작을 막음
+            if (name) {
+                window.location.href = '/chat-to/' + name;
+            }
+        });
+    });
+</script>
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+</body>
+
+</html>

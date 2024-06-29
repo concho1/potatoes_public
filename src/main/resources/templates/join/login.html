@@ -1,0 +1,100 @@
+<!-- 이 코드를 복붙해서 사용해주세요 -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<!-- top-header 추가 방법 -->
+<head th:replace="~{common/header-top :: header-top-fragment}"><title>감자팀</title></head>
+
+<body>
+<!-- header 추가 방법 -->
+<header th:replace="~{common/header :: header-fragment}"></header>
+<!-- sidebar 추가 방법 -->
+<aside th:replace="~{common/sidebar :: sidebar-fragment}"></aside>
+
+<!-- 템플릿 html 파일에서 main 부분 가져와서 수정해주세요!-->
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <img src="assets/img/logo.png" alt="">
+                                <span class="d-none d-lg-block">찾아감</span>
+                            </a>
+                        </div><!-- End Logo -->
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">분실물 찾기 통합 사이트 찾아감</h5>
+                                    <p class="text-center small">로그인</p>
+                                </div>
+
+                                <form method="post" th:action="@{loginOk}" >
+                                    <table width="350">
+                                        <tr>
+                                            <td class="form-label">아이디</td>
+                                            <td>
+                                                <input name="id" id="id" placeholder="your@email.com">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>비밀번호</td>
+                                            <td>
+                                                <input type="password" name="pwd" id="pwd">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <br>
+                                    <div class="text-center">
+                                        <p class="small mb-0"> <a th:href="@{/searchPWD}">비밀번호찾기</a></p>
+                                    </div>
+                                    <br>
+                                    <div class="text-center">
+                                        <input type="submit" value="로그인" class="btn btn-primary" style="width: 183px;height: 45px; margin-bottom: 7px;" onclick="return loginCheck()">
+                                    </div>
+
+                                    <div class="text-center">
+                                        <a th:href="@{/login/kakao}">
+                                            <img th:src="@{/common/images/kakao_login_medium_narrow.png}">
+                                            <br>
+                                        </a>
+                                    </div>
+
+                                </form>
+                                <br><br>
+                                <span class="d-none d-lg-block">아직 회원이 아니신가요?</span>
+                                <input type="button" value="회원가입" class="btn btn-primary w-100" onclick="location.href='join'">
+                            </div>
+                        </div>
+
+                        <div class="credits">
+                            <!-- All the links in the footer should remain intact. -->
+                            <!-- You can delete the links only if you purchased the pro version. -->
+                            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+                            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main><!-- End #main -->
+<!-- -->
+
+<!-- footer 추가 방법 -->
+<footer th:replace="~{common/footer :: footer-fragment}"></footer>
+<script type="text/javascript" th:src="@{/ham/js/loginCheck.js}"></script>
+</body>
+
+</html>

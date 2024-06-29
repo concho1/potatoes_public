@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goott.potatoes.Hamster.mapper.missingMapper">
+
+    <insert id="missingboard_write" parameterType="missing">
+        INSERT INTO missing VALUES
+            ((SELECT IFNULL(MAX(mis_num), 0) FROM missing ALIAS_FOR_SUBQUERY)+1,
+             #{userId}, #{categoryId}, #{majorCategory}, #{minorCategory}, #{imgKey}, #{title}, #{cont}, #{location},
+             null,0,NOW(),null);
+    </insert>
+
+    <select id="missingBoardList" resultType="missing">
+        select * from missing order by mis_num desc
+    </select>
+
+    <select id="mBoardCont" resultType="missing" parameterType="int">
+        select * from missing where mis_num = #{no}
+    </select>
+
+    <update id="mBoardModify" parameterType="missing">
+        update missing set major_category = #{majorCategory},minor_category=#{minorCategory},
+                         img_key=#{imgKey},title=#{title},cont=#{cont},location=#{location}
+        where mis_num = #{misNum}
+    </update>
+
+    <delete id="mBoardDelete" parameterType="int">
+        delete from missing where mis_num = #{misNum}
+    </delete>
+
+    <update id="updateSequence" parameterType="int">
+        update missing set mis_num = mis_num - 1 where mis_num > #{no}
+    </update>
+
+    <update id="mboard_hit" parameterType="int">
+        update missing set view_cnt = view_cnt + 1 where mis_num = #{no}
+    </update>
+</mapper>
